@@ -1,10 +1,47 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Home, Register, Login, Movies, NewMovie, SitSelector, Payments, NotFound } from "./Pages";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home /> ,
+  },
+  {
+    path: "/Register",
+    element: <Register /> ,
+  },
+  {
+    path: "/Login",
+    element: <Login /> ,
+  },
+  {
+    path: "/Movies",
+    element: <Movies /> ,
+  },
+  {
+    path: "/NewMovie",
+    element: <NewMovie /> ,
+  },
+  {
+    path: "/SitSelector",
+    element: <SitSelector /> ,
+  },
+  {
+    path: "/Payments",
+    element: <Payments /> ,
+  },
+  {
+    path: "*",
+    element: <NotFound /> ,
+  },
+])
+
+
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold text-red-500 underline">
-        Hello world!
-      </h1>
-    </>
+    <div>
+      <RouterProvider router={ router } />
+    </div>
   );
 }
 
