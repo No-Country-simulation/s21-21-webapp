@@ -8,5 +8,3 @@ import { Payments } from "./Payments/Payments";
 import { NotFound } from "./NotFound/NotFound";
 
 export { Home, Register, Login, Movies, NewMovie, SitSelector, Payments, NotFound };
-
-//prueba
