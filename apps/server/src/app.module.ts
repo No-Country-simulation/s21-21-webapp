@@ -7,6 +7,7 @@ import { MoviesModule } from "./movies/movies.module";
 import { BookingModule } from "./booking/booking.module";
 import { HallModule } from './hall/hall.module';
 import { ScreeningModule } from './screening/screening.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ScreeningModule } from './screening/screening.module';
     AuthModule,
     HallModule,
     ScreeningModule,
+    PaymentsModule,
   ]
 })
 export class AppModule {}
