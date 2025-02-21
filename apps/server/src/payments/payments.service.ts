@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
+
+import { PaymentSessionDto } from './dto/payment-session.dto';
+import { ConfigService } from '@nestjs/config';
+import Stripe from 'stripe';
+import { envs } from './config/envs';
 
 @Injectable()
 export class PaymentsService {
-  create(createPaymentDto: CreatePaymentDto) {
-    return 'This action adds a new payment';
-  }
+  private stripe = new Stripe(envs.STRIPE_SECRET_KEY!)
 
-  findAll() {
-    return `This action returns all payments`;
-  }
+  constructor() { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
-  }
+  async createPaymentSession(paymentSessionDto: PaymentSessionDto) {
+    const { currency, items, orderId, discounts } = paymentSessionDto;
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
-  }
+    try {
+      const lineItems = items.map((item) => ({
+        price_data: {
+          currency,
+          product_data: {
+            name: item.name,
+            images: [item.imageUrl]
+          },
+          // unit_amount: item.price * 100,
+          unit_amount: item.price
+        },
+        quantity: item.quantity,
+      }));
 
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
+      const session = await this.stripe.checkout.sessions.create({
+        payment_intent_data: {
+          metadata: { orderId },
+        },
+        discounts,
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: envs.STRIPE_SUCCESS_URL,
+        cancel_url: envs.STRIPE_CANCEL_URL,
+      });
+
+      return {
+        cancelUrl: session.cancel_url,
+        successUrl: session.success_url,
+        url: session.url
+      }
+
+    } catch (error) {
+      throw error
+    }
   }
 }
