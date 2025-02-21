@@ -3,3 +3,44 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #8e0b13 !important;
+  background-color: #8e0b1479;
+  border-radius: 999px;
+  top: var(--swiper-navigation-top-offset, 60%) !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-family: swiper-icons;
+  font-size: 14px !important;
+  font-weight: 600;
+  color: #fff8f0;
+  text-transform: none !important;
+  letter-spacing: 0;
+  font-variant: initial;
+  line-height: 1;
+}
+
+.swiper-pagination-bullet {
+  background: #fff8f0 !important;
+  opacity: 0.4 !important;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: var(--swiper-pagination-bullet-opacity, 1) !important;
+  background: #8e0b13 !important;
+}
+
+@media (min-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    top: var(--swiper-navigation-top-offset, 50%) !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
