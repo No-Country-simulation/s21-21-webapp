@@ -1,46 +1,55 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Home, Register, Login, Movies, NewMovie, SitSelector, Payments, NotFound } from "./Pages";
+import {
+  Home,
+  Register,
+  Login,
+  Movies,
+  NewMovie,
+  SitSelector,
+  Payments,
+  NotFound,
+} from "./Pages";
+import "@fontsource/poppins";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home /> ,
+    element: <Home />,
   },
   {
     path: "/Register",
-    element: <Register /> ,
+    element: <Register />,
   },
   {
     path: "/Login",
-    element: <Login /> ,
+    element: <Login />,
   },
   {
     path: "/Movies",
-    element: <Movies /> ,
+    element: <Movies />,
   },
   {
     path: "/NewMovie",
-    element: <NewMovie /> ,
+    element: <NewMovie />,
   },
   {
     path: "/SitSelector",
-    element: <SitSelector /> ,
+    element: <SitSelector />,
   },
   {
     path: "/Payments",
-    element: <Payments /> ,
+    element: <Payments />,
   },
   {
     path: "*",
-    element: <NotFound /> ,
+    element: <NotFound />,
   },
-])
-
+]);
 
 function App() {
   return (
     <div>
-      <RouterProvider router={ router } />
+      <RouterProvider router={router} />
     </div>
   );
 }
