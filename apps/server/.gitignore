@@ -15,6 +15,7 @@ lerna-debug.log*
 # Others
 pnpm-lock.jsom
 pnpm-lock.yaml
+api
 
 # OS
 .DS_Store
