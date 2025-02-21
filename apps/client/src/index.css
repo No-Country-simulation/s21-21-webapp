@@ -4,6 +4,38 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --shadow-card: 2px 4px 10px 4px #00000040;
+  --shadow-footer: 0 2px 10px 0 #00000040;
+}
+
+@layer base {
+  h1 {
+    @apply text-xl md:text-2xl lg:text-4xl font-bold;
+  }
+}
+
+@layer components {
+  .movie-card {
+    span {
+      @apply font-medium text-xs;
+    }
+
+    .icon {
+      @apply w-auto h-[15px];
+    }
+
+    .badge {
+      @apply px-2.5 py-1 rounded-lg bg-[#797373] text-xs text-white;
+    }
+  }
+}
+
+/* ESTILOS PERSONALIZADOS DE SLIDER */
 .swiper-button-prev,
 .swiper-button-next {
   color: #8e0b13 !important;
@@ -36,6 +68,34 @@ body {
   background: #8e0b13 !important;
 }
 
+.upcoming-movies-swiper {
+  padding-bottom: 50px !important;
+}
+
+.upcoming-movies-swiper .swiper-pagination-bullet {
+  background: #5a5755 !important;
+  opacity: 0.4 !important;
+}
+.upcoming-movies-swiper .swiper-pagination-bullet-active {
+  background: #8e0b13 !important;
+  opacity: 1 !important;
+}
+
+.upcoming-movies-swiper .swiper-button-next,
+.upcoming-movies-swiper .swiper-button-prev {
+  color: #8e0b13;
+}
+
+@media (max-width: 640px) {
+  .upcoming-movies-swiper .swiper-button-next,
+  .upcoming-movies-swiper .swiper-button-prev {
+    display: none;
+  }
+}
+.swiper-slide {
+  height: auto;
+}
+
 @media (min-width: 768px) {
   .swiper-button-prev,
   .swiper-button-next {
@@ -44,3 +104,4 @@ body {
     height: 40px !important;
   }
 }
+/* ============= */
