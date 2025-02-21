@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row w-full items-center justify-between space-x-10 px-2.5 lg:px-20 xl:px-36">
           <Link to="/">
             <img
-              src="/Logo.png"
+              src="/Logos.png"
               alt="Logo Cine Astas"
               width={196}
               height={40}
@@ -21,7 +21,7 @@ const Footer = () => {
               <li key={link.id} className="text-center py-1 md:p-0">
                 <a
                   href={link.path}
-                  className={`text-black font-medium hover:font-semibold`}
+                  className={`text-text font-medium hover:font-semibold`}
                 >
                   {link.name}
                 </a>

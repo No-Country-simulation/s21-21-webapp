@@ -13,7 +13,7 @@ const MovieCard = ({
   time,
 }) => {
   return (
-    <div className="w-full max-w-85 px-3 py-3 sm:px-5 sm:py-4.5 bg-[#F9F6EE] rounded-lg movie-card shadow-card flex flex-col">
+    <div className="w-full max-w-85 px-3 py-3 sm:px-5 sm:py-4.5 bg-florar-white rounded-lg movie-card shadow-card flex flex-col">
       <img
         src={cover}
         alt={title}

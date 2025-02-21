@@ -11,7 +11,7 @@ const Navbar = () => {
     <header className="w-full h-14 py-2 shadow-md">
       <nav className="container mx-auto flex flex-row items-center justify-between px-2.5 lg:px-20 xl:px-36">
         <Link to="/">
-          <img src="/Logo.png" alt="Logo Cine Astas" width={196} height={40} />
+          <img src="/Logos.png" alt="Logo Cine Astas" width={196} height={40} />
         </Link>
 
         <div
@@ -26,7 +26,7 @@ const Navbar = () => {
               <li key={link.id} className="text-center py-1 md:p-0">
                 <a
                   href={link.path}
-                  className={`text-black font-medium hover:font-semibold`}
+                  className={`text-text font-medium hover:font-semibold`}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}

@@ -11,18 +11,19 @@ html {
 @theme {
   --shadow-card: 2px 4px 10px 4px #00000040;
   --shadow-footer: 0 2px 10px 0 #00000040;
-  --color-florar-white: #FFF8F0;
-  --color-text: #252B2B;
-  --color-btn-primary: #8E0B13;
-  --color-btn-hover: #C1252F;
-  --color-Error: #DC2626;
-  --color-Success: #16A34A;
-  --color-Border: #ECECEC;
+  --color-florar-white: #f9f6ee;
+  --color-seasalt: #faf9f7;
+  --color-text: #252b2b;
+  --color-btn-primary: #8e0b13;
+  --color-btn-hover: #c1252f;
+  --color-Error: #dc2626;
+  --color-Success: #16a34a;
+  --color-Border: #ececec;
 }
 
 @layer base {
   h1 {
-    @apply text-xl md:text-2xl lg:text-4xl font-bold;
+    @apply text-xl md:text-2xl lg:text-4xl font-bold text-text;
   }
 }
 
