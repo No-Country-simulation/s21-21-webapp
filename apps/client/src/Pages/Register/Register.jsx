@@ -3,7 +3,10 @@ import React from 'react'
 export const Register = () => {
   return (
     <div className="flex">
-      <div className="hidden lg:flex w-1/2 min-h-155 bg-gray-300">
+      <div 
+        className="hidden lg:flex w-1/2 min-h-screen bg-gray-300 bg-cover bg-center"
+        style={{backgroundImage: "url('/register_img.webp')"}}
+      >
       </div>
       
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
@@ -57,7 +60,7 @@ export const Register = () => {
                 placeholder="*******"
                 required
               />
-              <label className="block text-gray-400 text-xs mb-1">Repetir la constraseña</label>
+              <label className="block text-gray-400 text-xs mb-1">Repite la contraseña</label>
             </div>
             <button className="w-full max-w-80 bg-btn-primary text-white p-1 rounded-sm font-bold hover:bg-btn-hover transition">
               Crear Cuenta

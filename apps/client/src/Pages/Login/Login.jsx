@@ -4,7 +4,11 @@ import React from 'react'
 export const Login = () => {
   return (
     <div className="flex">
-      <div className="hidden lg:flex w-1/2 min-h-155 bg-gray-300"></div>
+      <div 
+        className="hidden lg:flex w-1/2 min-h-screen bg-gray-300 bg-cover bg-center"
+        style={{backgroundImage: "url('/login_img.webp')"}}
+      >
+      </div>
       
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
         <div className="w-full max-w-sm bg-white p-3 rounded-lg">
