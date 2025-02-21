@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+    --color-florar-white: #FFF8F0;
+    --color-text: #252B2B;
+    --color-btn-primary: #8E0B13;
+    --color-btn-hover: #C1252F;
+    --color-Error: #DC2626;
+    --color-Success: #16A34A;
+    --color-Border: #ECECEC;
+  }
