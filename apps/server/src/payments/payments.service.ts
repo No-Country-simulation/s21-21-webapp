@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaymentSessionDto } from './dto/payment-session.dto';
-import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
+
+import { PaymentSessionDto } from './dto/payment-session.dto';
 import { envs } from './config/envs';
 
 @Injectable()
@@ -48,5 +48,46 @@ export class PaymentsService {
     } catch (error) {
       throw error
     }
+  }
+
+  async stripeWebhook({ signature, rawBody }: { signature: string, rawBody: Buffer<ArrayBufferLike> }) {
+
+    const endpointSecret = envs.STRIPE_ENPOINT_SECRET!
+
+    let event: Stripe.Event;
+
+    console.log('Hello')
+
+    try {
+      event = this.stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        endpointSecret,
+      );
+    } catch (error) {
+      throw error
+    }
+
+    return event
+
+    // switch (event.type) {
+    //   case 'charge.succeeded':
+    //     const chargeSucceeded = event.data.object;
+
+    //     const payload = {
+    //       stripeChargeId: chargeSucceeded.id,
+    //       orderId: chargeSucceeded.metadata.orderId,
+    //       receiptUrl: chargeSucceeded.receipt_url
+    //     }
+
+    //   // return await firstValueFrom(this.orderClient.send('paid-order', payload))
+    //   default:
+    //     console.log(`Event ${event.type} not handled`);
+    // }
+
+    // return {
+    //   message: 'success',
+    //   signature
+    // }
   }
 }
