@@ -12,21 +12,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  EMPLOYEE
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  DELIVERED
+  CANCELLED
+}
+
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
   password  String
   name      String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   bookings  Booking[]
 }
 
 model Image {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   url         String
-  publicId    String    // ID de Cloudinary
+  publicId    String // ID de Cloudinary
   description String?
   comments    Comment[]
   createdAt   DateTime  @default(now())
@@ -40,15 +59,15 @@ model Comment {
   image     Image    @relation(fields: [imageId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}  
+}
 
 model Movie {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   year        Int
   genre       String
   language    String
-  duration    Int  // Duración en minutos
+  duration    Int // Duración en minutos
   imageUrl    String?
   trailerUrl  String?
   description String?
@@ -56,43 +75,65 @@ model Movie {
 }
 
 model Hall {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  capacity  Int
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  capacity   Int
   screenings Screening[]
 }
 
 model Screening {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  movieId   String   @db.ObjectId
-  hallId    String   @db.ObjectId
-  schedule  DateTime
-  price     Float
-  movie     Movie   @relation(fields: [movieId], references: [id])
-  hall      Hall    @relation(fields: [hallId], references: [id])
-  bookings  Booking[]
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  movieId  String    @db.ObjectId
+  hallId   String    @db.ObjectId
+  schedule DateTime
+  price    Float
+  movie    Movie     @relation(fields: [movieId], references: [id])
+  hall     Hall      @relation(fields: [hallId], references: [id])
+  bookings Booking[]
 }
 
 model Booking {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
-  screeningId String   @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        @db.ObjectId
+  screeningId String        @db.ObjectId
   seats       Int
   totalPrice  Float
   status      BookingStatus @default(PENDING)
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
-  screening   Screening @relation(fields: [screeningId], references: [id])
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  screening   Screening     @relation(fields: [screeningId], references: [id])
 }
 
-enum Role {
-  USER
-  EMPLOYEE
-  ADMIN
+model OrderItem {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  productId String
+  quantity  Int
+  price     Float
+
+  Order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @db.ObjectId
+
+  @@map("order_item")
 }
 
-enum BookingStatus {
-  PENDING
-  PAID
-  CANCELLED
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  totalAmount Float
+  totalItems  Int
+
+  buyerUserId String
+
+  status         OrderStatus @default(PENDING)
+  paid           Boolean     @default(false)
+  paidAt         DateTime?
+  stripeChargeId String?
+  receiptUrl     String?
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  OrderItem OrderItem[]
+
+  @@map("orders")
 }
