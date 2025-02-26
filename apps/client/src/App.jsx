@@ -11,6 +11,17 @@ import {
 } from "./Pages";
 import "@fontsource/poppins";
 
+import {
+  AdmBanners,
+  AdmDashboard,
+  AdmMovies,
+  AdmSettings,
+} from "./Pages/DashboardAdmin/pages";
+
+import {
+  DashboardLayout,
+} from "./Pages/DashboardAdmin";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,6 +50,28 @@ const router = createBrowserRouter([
   {
     path: "/Payments",
     element: <Payments />,
+  },
+  {
+    path: "/admin",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <AdmDashboard />,
+      },
+      {
+        path: "banners",
+        element: <AdmBanners/>,
+      },
+      {
+        path: "movies",
+        element: <AdmMovies />,
+      },
+      {
+        path: "settings",
+        element: <AdmSettings />,
+      },
+    ],
   },
   {
     path: "*",
