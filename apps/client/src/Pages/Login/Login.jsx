@@ -1,7 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 export const Login = () => {
+
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:5173/auth/login', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Error al iniciar sesión');
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="flex">
       <div 
@@ -18,11 +51,15 @@ export const Login = () => {
           </div>
           <h2 className="text-2xl font-bold text-justify-left mb-3">Iniciar sesión</h2>
           <h3 className="text-sm text-justify-left mb-5">Ingrese sus credenciales para iniciar sesión en su cuenta.</h3>
-          <form>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="block text-gray-700 text-xs font-bold mb-1">Correo Electrónico</label>
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="correo@ejemplo.com"
                 required
@@ -34,6 +71,9 @@ export const Login = () => {
               <label className="block text-gray-700 text-xs font-bold mb-1">Contraseña</label>
               <input
                 type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="*******"
                 required

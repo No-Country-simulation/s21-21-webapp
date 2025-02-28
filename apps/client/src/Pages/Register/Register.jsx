@@ -1,6 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 export const Register = () => {
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    };
+
+    try {
+      const response = await fetch('http://localhost:5173/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Error al registrar');
+
+      setSuccess("Registro exitoso. Ahora puedes iniciar sesión.");
+      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="flex">
       <div 
@@ -17,15 +63,21 @@ export const Register = () => {
           </div>
           <h2 className="text-2xl font-bold text-justify-left mb-2">Registro</h2>
           <h3 className="text-sm text-justify-left mb-3">Ingrese sus datos para crear su cuenta.</h3>
-          <form>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && <p className="text-green-500 text-sm">{success}</p>}
+          <form onSubmit={handleSubmit}>
 
             <div className="mb-3">
               <label className="block text-gray-700 text-xs font-bold mb-1">Nombre</label>
               <input
-                type="email"
-                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="John Doe"
+                type="text"
+                name="name"
+                placeholder="Nombre"
+                value={formData.name}
+                onChange={handleChange}
                 required
+                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <label className="block text-gray-400 text-xs mb-1">Ingresa tu nombre</label>
             </div>
@@ -34,9 +86,12 @@ export const Register = () => {
               <label className="block text-gray-700 text-xs font-bold mb-1">Correo Electrónico</label>
               <input
                 type="email"
-                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="email"  
                 placeholder="correo@ejemplo.com"
+                value={formData.email} 
+                onChange={handleChange} 
                 required
+                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <label className="block text-gray-400 text-xs mb-2">Ingresa tu correo electrónico</label>
             </div>
@@ -45,9 +100,12 @@ export const Register = () => {
               <label className="block text-gray-700 text-xs font-bold mb-1">Contraseña</label>
               <input
                 type="password"
-                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="password"
                 placeholder="*******"
+                value={formData.password} 
+                onChange={handleChange}
                 required
+                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <label className="block text-gray-400 text-xs mb-1">Ingresa una contraseña</label>
             </div>
@@ -56,13 +114,16 @@ export const Register = () => {
               <label className="block text-gray-700 text-xs font-bold mb-1">Confirmar contraseña</label>
               <input
                 type="password"
-                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="confirmPassword" 
                 placeholder="*******"
+                value={formData.confirmPassword} 
+                onChange={handleChange}
                 required
+                className="w-full max-w-80 p-0.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <label className="block text-gray-400 text-xs mb-1">Repite la contraseña</label>
             </div>
-            <button className="w-full max-w-80 bg-btn-primary text-white p-1 rounded-sm font-bold hover:bg-btn-hover transition">
+            <button type="submit" className="w-full max-w-80 bg-btn-primary text-white p-1 rounded-sm font-bold hover:bg-btn-hover transition">
               Crear Cuenta
             </button>
             <div className="w-full max-w-80 text-center ">
