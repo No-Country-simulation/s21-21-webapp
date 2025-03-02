@@ -52,7 +52,7 @@ const MovieCard = ({
             </span>
           ))}
         </div>
-        <div className="flex flex-row items-center gap-x-1 flex-wrap text-xs sm:text-sm">
+        <div className="flex flex-row items-center gap-1 flex-wrap text-xs sm:text-sm">
           <span className="font-semibold">Horarios:</span>
           {time.map((t, index) => (
             <span key={index} className="badge text-xs">
