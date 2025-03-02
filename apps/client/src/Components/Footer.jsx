@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row w-full items-center justify-between space-x-10 px-2.5 lg:px-20 xl:px-36">
           <Link to="/">
             <img
-              src="/Logos.png"
+              src="/Logos.webp"
               alt="Logo Cine Astas"
               width={196}
               height={40}
