@@ -113,7 +113,7 @@ model OrderItem {
   Order   Order?  @relation(fields: [orderId], references: [id])
   orderId String? @db.ObjectId
 
-  @@map("order_item")
+  @@map("OrderItem")
 }
 
 model Order {
@@ -135,5 +135,5 @@ model Order {
 
   OrderItem OrderItem[]
 
-  @@map("orders")
+  @@map("Orders")
 }

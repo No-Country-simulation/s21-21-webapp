@@ -10,11 +10,11 @@ export class OrdersController {
   @Post('create-order')
   async create(@Body() createOrderDto: CreateOrderDto) {
     const order = await this.ordersService.create(createOrderDto);
-    // const paymentSession = await this.ordersService.createPaymentSession(order)
+    const paymentSession = await this.ordersService.createPaymentSession(order)
 
-    // return {
-    //   order,
-    //   paymentSession
-    // }
+    return {
+      order,
+      paymentSession
+    }
   }
 }
