@@ -7,6 +7,9 @@ import { PaymentsController } from './payments.controller';
 @Module({
   controllers: [PaymentsController],
   providers: [PaymentsService],
-  imports: [ConfigModule.forRoot()]
+  imports: [ConfigModule.forRoot()],
+  exports: [
+    PaymentsService
+  ]
 })
 export class PaymentsModule {}

@@ -1,7 +1,7 @@
-import { IsEnum, IsNumber, IsPositive, IsUUID } from 'class-validator';
+import { IsMongoId, IsNumber, IsPositive } from 'class-validator';
 
 export class OrderItemDto {
-  @IsUUID()
+  @IsMongoId()
   productId: string;
 
   @IsNumber()
