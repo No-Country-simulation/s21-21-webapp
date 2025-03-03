@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --shadow-card: 2px 4px 10px 4px #00000040;
+  --shadow-footer: 0 2px 10px 0 #00000040;
+  --color-florar-white: #f9f6ee;
+  --color-seasalt: #faf9f7;
+  --color-text: #252b2b;
+  --color-btn-primary: #8e0b13;
+  --color-btn-hover: #c1252f;
+  --color-Error: #dc2626;
+  --color-Success: #16a34a;
+  --color-Border: #ececec;
+}
+
+@layer base {
+  h1 {
+    @apply text-xl md:text-2xl lg:text-4xl font-bold text-text;
+  }
+}
+
+@layer components {
+  .movie-card {
+    span {
+      @apply font-medium text-xs;
+    }
+
+    .icon {
+      @apply w-auto h-[15px];
+    }
+
+    .badge {
+      @apply px-2.5 py-1 rounded-lg bg-[#797373] text-xs text-white;
+    }
+  }
+}
+
+/* ESTILOS PERSONALIZADOS DE SLIDER */
+.swiper-button-prev,
+.swiper-button-next {
+  color: #8e0b13 !important;
+  background-color: #8e0b1479;
+  border-radius: 999px;
+  top: var(--swiper-navigation-top-offset, 60%) !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-family: swiper-icons;
+  font-size: 14px !important;
+  font-weight: 600;
+  color: #fff8f0;
+  text-transform: none !important;
+  letter-spacing: 0;
+  font-variant: initial;
+  line-height: 1;
+}
+
+.swiper-pagination-bullet {
+  background: #fff8f0 !important;
+  opacity: 0.4 !important;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: var(--swiper-pagination-bullet-opacity, 1) !important;
+  background: #8e0b13 !important;
+}
+
+.upcoming-movies-swiper {
+  padding-bottom: 50px !important;
+}
+
+.upcoming-movies-swiper .swiper-pagination-bullet {
+  background: #5a5755 !important;
+  opacity: 0.4 !important;
+}
+.upcoming-movies-swiper .swiper-pagination-bullet-active {
+  background: #8e0b13 !important;
+  opacity: 1 !important;
+}
+
+.upcoming-movies-swiper .swiper-button-next,
+.upcoming-movies-swiper .swiper-button-prev {
+  color: #8e0b13;
+}
+
+@media (max-width: 640px) {
+  .upcoming-movies-swiper .swiper-button-next,
+  .upcoming-movies-swiper .swiper-button-prev {
+    display: none;
+  }
+}
+.swiper-slide {
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    top: var(--swiper-navigation-top-offset, 50%) !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+/* ============= */

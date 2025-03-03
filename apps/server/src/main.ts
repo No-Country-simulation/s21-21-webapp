@@ -1,21 +1,35 @@
+import { ValidationPipe, Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+import { AppModule } from "./app.module";
 
-  // Configuración de Swagger
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+    bodyParser: true
+  });
+
+  const logger = new Logger()
+
+  app.enableCors();
+
+  app.useGlobalPipes(new ValidationPipe());
+
   const config = new DocumentBuilder()
     .setTitle("API Cine")
     .setDescription("Documentation API Cine")
     .setVersion("1.0")
-    // .addBearerAuth() // Si usas autenticación con JWT
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+  SwaggerModule.setup("api", app, document)
 
-  await app.listen(3000);
+  const PORT = 3000 | 0
+
+  await app.listen(PORT);
+
+  logger.log(`Server listen in: http://localhost:${PORT}`)
 }
 bootstrap();
