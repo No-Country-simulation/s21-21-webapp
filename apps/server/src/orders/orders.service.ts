@@ -6,8 +6,6 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PaymentsService } from '../payments/payments.service';
 
-
-// 
 import { OrderStatus } from '@prisma/client'
 
 interface OrderWithProducts {
