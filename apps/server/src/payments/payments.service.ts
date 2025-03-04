@@ -5,6 +5,18 @@ import Stripe from 'stripe';
 import { PaymentSessionDto } from './dto/payment-session.dto';
 import { envs } from './config/envs';
 
+interface LineItem {
+  price_data: {
+    currency: string;
+    product_data: {
+      name: string;
+      images?: string[]
+    };
+    unit_amount: number;
+  };
+  quantity: number;
+}
+
 @Injectable()
 export class PaymentsService {
   private stripe = new Stripe(envs.STRIPE_SECRET_KEY!)
@@ -15,18 +27,25 @@ export class PaymentsService {
     const { currency, items, orderId, discounts } = paymentSessionDto;
 
     try {
-      const lineItems = items.map((item) => ({
-        price_data: {
-          currency,
-          product_data: {
-            name: item.name,
-            images: [item.imageUrl]
+      const lineItems: LineItem[] = items.map((item) => {
+        const line: LineItem = {
+          price_data: {
+            currency,
+            product_data: {
+              name: item.name,
+            },
+            // unit_amount: item.price * 100,
+            unit_amount: item.price
           },
-          // unit_amount: item.price * 100,
-          unit_amount: item.price
-        },
-        quantity: item.quantity,
-      }));
+          quantity: item.quantity,
+        }
+
+        if (item.imageUrl && item.imageUrl.trim().length > 0) {
+          line.price_data.product_data.images = [item.imageUrl];
+        }
+
+        return line
+      })
 
       const session = await this.stripe.checkout.sessions.create({
         payment_intent_data: {

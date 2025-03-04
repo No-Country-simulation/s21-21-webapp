@@ -40,7 +40,7 @@ export class Discount {
 export class PaymentSessionItemDto {
   @IsOptional()
   @IsUrl()
-  imageUrl: string
+  imageUrl?: string
 
   @IsString()
   name: string;

@@ -11,7 +11,7 @@ const Navbar = () => {
     <header className="w-full h-14 py-2 shadow-md">
       <nav className="container mx-auto flex flex-row items-center justify-between px-2.5 lg:px-20 xl:px-36">
         <Link to="/">
-          <img src="/Logos.png" alt="Logo Cine Astas" width={196} height={40} />
+          <img src="/Logos.webp" alt="Logo Cine Astas" width={196} height={40} />
         </Link>
 
         <div
