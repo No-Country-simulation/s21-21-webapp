@@ -34,12 +34,13 @@ enum OrderStatus {
 model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   email     String    @unique
-  password  String
+  password  String?
   name      String
   role      Role      @default(USER)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   bookings  Booking[]
+  googleAuthToken      String?
 }
 
 model Image {
