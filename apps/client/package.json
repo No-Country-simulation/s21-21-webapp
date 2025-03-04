@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^5.1.1",
+    "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.7",
+    "axios": "^1.8.1",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

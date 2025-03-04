@@ -5,13 +5,16 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { MoviesModule } from "./movies/movies.module";
 import { BookingModule } from "./booking/booking.module";
-import { HallModule } from './hall/hall.module';
-import { ScreeningModule } from './screening/screening.module';
-import { PaymentsModule } from './payments/payments.module';
-import { OrdersModule } from './orders/orders.module';
-
+import { HallModule } from "./hall/hall.module";
+import { ScreeningModule } from "./screening/screening.module";
+import { PaymentsModule } from "./payments/payments.module";
+import { OrdersModule } from "./orders/orders.module";
+import { ConfigModule } from "@nestjs/config";
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     CloudinaryModule,
     ImagesModule,
     PrismaModule,
@@ -22,6 +25,6 @@ import { OrdersModule } from './orders/orders.module';
     ScreeningModule,
     PaymentsModule,
     OrdersModule,
-  ]
+  ],
 })
 export class AppModule {}
