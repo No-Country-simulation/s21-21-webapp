@@ -1,5 +1,3 @@
-import axios from "axios";
-
 // Note: Check if your API is actually at /api/auth or just /auth
 const API_BASE_URL = "http://localhost:3000";
 
@@ -7,14 +5,16 @@ export const googleLogin = async (token) => {
   try {
     // The correct endpoint path - check if your NestJS routes include the /api prefix
     // If your controller is mounted at /auth, the endpoint would be /auth/google-login
-    const response = await axios.post(
-      `${API_BASE_URL}/api/auth/google-login`, // Removed the '/api' prefix
-      { token },
+    const response = await fetch(
+      `${API_BASE_URL}/auth/google-login`, // Removed the '/api' prefix
       {
-        withCredentials: true,
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
+          withCredentials: "true",
         },
+        body: JSON.stringify({ token }),
       }
     );
 

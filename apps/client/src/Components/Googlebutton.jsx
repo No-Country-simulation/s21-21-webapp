@@ -1,7 +1,7 @@
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { googleLogin } from "../Constants/googlelogin";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { googleLogin } from "../Constants/googlelogin";
+import { GoogleLogin } from "@react-oauth/google";
 
 const GoogleButton = () => {
   const navigate = useNavigate();
@@ -38,24 +38,20 @@ const GoogleButton = () => {
   };
 
   return (
-    <div className="google-login-container">
-      <GoogleOAuthProvider
-        clientId={
-          "566063083458-51k9fvuupd3kju0klptht1p5ocuppqu7.apps.googleusercontent.com"
-        }
-      >
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleFailure}
-          useOneTap
-          theme="outline"
-          text="continue_with"
-          size="large"
-        />
-        {loginError && (
-          <div className="error-message mt-2 text-red-500">{loginError}</div>
-        )}
-      </GoogleOAuthProvider>
+    <div className="google-login-container py-2">
+      <GoogleLogin
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleFailure}
+        useOneTap
+        theme="outline"
+        text="continue_with"
+        size="large"
+        width="100%"
+        locale="es_AR"
+      />
+      {loginError && (
+        <div className="error-message mt-2 text-red-500">{loginError}</div>
+      )}
     </div>
   );
 };

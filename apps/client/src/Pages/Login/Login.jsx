@@ -1,5 +1,4 @@
-//import React from "react";
-import GoogleButton from "../../Components/Googlebutton";
+import GoogleButton from "../../Components/GoogleButton";
 
 export const Login = () => {
   return (
@@ -63,7 +62,9 @@ export const Login = () => {
             <button className="w-full max-w-80 bg-btn-primary text-white p-1 rounded-sm font-bold hover:bg-btn-hover transition">
               Ingresar
             </button>
-            <GoogleButton />
+            <div className="w-full max-w-80 flex items-center justify-center">
+              <GoogleButton />
+            </div>
             <div className="w-full max-w-80 mb-1 mt-2 text-center ">
               <a href="#" className="text-blue-950 text-sm hover:underline">
                 ¿Olvidó tu contraseña?
