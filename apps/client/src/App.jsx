@@ -8,6 +8,7 @@ import {
   SitSelector,
   Payments,
   NotFound,
+  MovieDetails,
 } from "./Pages";
 import "@fontsource/poppins";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/Movies",
     element: <Movies />,
+  },
+  {
+    path: "/movie/:title",
+    element: <MovieDetails />, 
   },
   {
     path: "/NewMovie",

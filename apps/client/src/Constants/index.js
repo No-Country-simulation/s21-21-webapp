@@ -1,8 +1,4 @@
 import {
-  slide1,
-  slide2,
-  slide3,
-  slide4,
   amenaza_en_el_aire,
   capitan_america,
   deseo_prohibido,
@@ -38,22 +34,26 @@ export const HeroSlider = [
   {
     id: 0,
     movie: "Trampa del raton",
-    cover: slide4,
+    cover:
+      "https://res.cloudinary.com/dxquk9fwx/image/upload/v1741289627/xipikv7wirqwyvt5j8il.webp",
   },
   {
     id: 1,
     movie: "Capitan America: un nuevo mundo",
-    cover: slide3,
+    cover:
+      "https://res.cloudinary.com/dxquk9fwx/image/upload/v1741289676/wlfbmfernvrkjdaerysc.webp",
   },
   {
     id: 2,
     movie: "Amenaza en el Aire",
-    cover: slide1,
+    cover:
+      "https://res.cloudinary.com/dxquk9fwx/image/upload/v1741289696/q1cxoi2clzocomjnq035.webp",
   },
   {
     id: 3,
     movie: "DESEO PROHIBIDO",
-    cover: slide2,
+    cover:
+      "https://res.cloudinary.com/dxquk9fwx/image/upload/v1741289658/oqxyr00oiwbv3bgb3qh9.webp",
   },
 ];
 
