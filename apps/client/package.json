@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^5.1.1",
+    "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.7",
+    "axios": "^1.8.1",
+    "embla-carousel-react": "^8.5.2",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
-    "swiper": "^11.2.4",
     "tailwindcss": "^4.0.7"
   },
   "devDependencies": {
