@@ -1,40 +1,47 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { googleLogin } from "../Constants/googlelogin";
 import { GoogleLogin } from "@react-oauth/google";
+import { useMutation } from "@tanstack/react-query";
+import useAuthStore from "../store/authStore";
+import { fetchData } from "../utils/fetchData"; 
+import { toast } from "sonner";
 
 const GoogleButton = () => {
   const navigate = useNavigate();
-  const [loginError, setLoginError] = useState(null);
+  const login = useAuthStore((state) => state.login);
 
-  const handleGoogleSuccess = async (response) => {
-    try {
-      setLoginError(null);
-
-      // Only proceed if we have a credential
-      if (!response.credential) {
-        throw new Error("No credential received from Google");
+  const googleLoginMutation = useMutation({
+    mutationFn: async (credential) => {
+      const response = await fetchData("/auth/google-login", "POST", {
+        credential,
+      }); 
+      if (!response.ok) {
+        throw new Error("Error logging in with Google");
       }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      login({ user: data.user, accessToken: data.access_token });
+      toast.success("Inicio de sesión exitoso.");
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Error logging in with Google:", error);
+      toast.error("Error al logearse con Google");
+    },
+  });
 
-      console.log("Received Google credential, attempting login...");
-      const data = await googleLogin(response.credential);
-      console.log("Login successful:", data);
-
-      // Store auth data in localStorage
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Redirect to dashboard
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error during Google login:", error);
-      setLoginError(error.message || "Failed to login with Google");
+  const handleGoogleSuccess = (response) => {
+    if (response.credential) {
+      googleLoginMutation.mutate(response.credential);
+    } else {
+      console.error("No credential received from Google");
+      toast.error("Error logging in with Google");
     }
   };
 
   const handleGoogleFailure = (error) => {
     console.error("Google Sign-In Error:", error);
-    setLoginError("Google authentication failed");
+    toast.error("Error al logearse con Google");
   };
 
   return (
@@ -49,9 +56,6 @@ const GoogleButton = () => {
         width="100%"
         locale="es_AR"
       />
-      {loginError && (
-        <div className="error-message mt-2 text-red-500">{loginError}</div>
-      )}
     </div>
   );
 };
