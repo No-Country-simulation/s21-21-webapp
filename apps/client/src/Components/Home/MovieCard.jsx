@@ -26,13 +26,13 @@ const MovieCard = ({
         <div className="flex flex-col gap-y-1.5 sm:gap-y-2 py-2 flex-grow">
           <h2 className="uppercase font-bold text-sm sm:text-base">{title}</h2>
           <div className="flex flex-wrap gap-x-2 gap-y-1 text-xs sm:text-sm">
-            <div className="flex flex-row items-center gap-x-1">
+            {/* <div className="flex flex-row items-center gap-x-1">
               <CalendarRange
                 color="#8E0B13"
                 className="icon h-4 w-4 sm:h-5 sm:w-5"
               />
               <span>{releaseDate}</span>
-            </div>
+            </div> */}
             <div className="flex flex-row items-center gap-x-1">
               <Clock color="#8E0B13" className="icon h-4 w-4 sm:h-5 sm:w-5" />
               <span>{duration} min</span>
@@ -50,13 +50,13 @@ const MovieCard = ({
             <span className="font-semibold">Formato:</span>
             <span className="badge text-xs">{format}</span>
           </div>
-          <div className="flex flex-row items-center gap-1 flex-wrap text-xs sm:text-sm">
+          {/* <div className="flex flex-row items-center gap-1 flex-wrap text-xs sm:text-sm">
             <span className="font-semibold">Horarios:</span>
             <span className="badge text-xs">{schedules || "Sin horarios"}</span>
-          </div>
+          </div> */}
         </div>
         <Button className="mt-auto text-sm sm:text-base py-1.5 sm:py-2 w-full">
-          Comprar
+          Ver detalles
         </Button>
       </div>
     </Link>
