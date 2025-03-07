@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^5.1.1",
+    "@justinribeiro/lite-youtube": "^1.7.1",
     "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.0.7",
+    "@tanstack/react-query": "^5.67.1",
     "embla-carousel-react": "^8.5.2",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
