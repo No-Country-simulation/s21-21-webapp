@@ -6,25 +6,26 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PaymentsService } from '../payments/payments.service';
 
-
-// 
 import { OrderStatus } from '@prisma/client'
+import { ScreeningService } from '../screening/screening.service';
+import { PaidOrderDto } from './dto/paid-order.dto';
 
 interface OrderWithProducts {
   OrderItem: {
-    title: any;
-    price: number;
-    productId: string;
-    quantity: number;
-  }[];
-  id: string;
-  totalAmount: number;
-  totalItems: number;
-  status: OrderStatus;
-  paid: boolean;
-  paidAt: Date | null;
-  createdAt: Date;
-  updateAt: Date;
+    title: any
+    price: number
+    productId: string
+    quantity: number
+    imageUrl?: string
+  }[]
+  id: string
+  totalAmount: number
+  totalItems: number
+  status: OrderStatus
+  paid: boolean
+  paidAt: Date | null
+  createdAt: Date
+  updateAt: Date
   discounts: any
 }
 // 
@@ -33,7 +34,7 @@ interface OrderWithProducts {
 export class OrdersService {
 
   constructor(
-    private readonly moviesService: MoviesService,
+    private readonly screeningService: ScreeningService,
     private readonly paymentService: PaymentsService,
     private readonly prismaService: PrismaService
   ) { }
@@ -42,23 +43,25 @@ export class OrdersService {
     const { items, buyerUserId } = createOrderDto;
 
     const movieIds = items.map(movie => movie.productId)
-    const movies = await this.moviesService.validateIds(movieIds)
+
+    const defaultQuantity = 1
+
+    // validate ids also in the screening collection
+    const screeningMovies = await this.screeningService.validateIds(movieIds)
       .catch(err => { throw err })
 
-    const defaultPrice = 3000
-
     //* calculate total amount
-    const totalAmount = movies
-      .reduce((acc, { id }) => {
-        // const itemQuantity = items.find(item => item.productId === id).quantity
-        const itemQuantity = items.find(item => item?.productId === id)?.quantity ?? 1
-        const totalPrice = defaultPrice * itemQuantity
+    const totalAmount = screeningMovies
+      .reduce((acc, { price }) => {
+        const totalPrice = price * defaultQuantity
+
         return acc + totalPrice
       }, 0);
 
+
     //* total quantity of items
     const totalItems = items.reduce((acc, orderItem) => {
-      return acc + orderItem.quantity
+      return acc + defaultQuantity
     }, 0)
 
     //* create order
@@ -69,11 +72,10 @@ export class OrdersService {
         buyerUserId,
         OrderItem: {
           createMany: {
-            data: items.map(orderItem => ({
-              // price: movies.find(movie => movie.id === orderItem.productId)?.price,
-              price: defaultPrice,
-              quantity: orderItem.quantity,
-              productId: orderItem.productId
+            data: screeningMovies.map(({ price, id }) => ({
+              price: price,
+              productId: id,
+              quantity: defaultQuantity,
             }))
           }
         },
@@ -93,20 +95,27 @@ export class OrdersService {
       ...order,
       OrderItem: order.OrderItem.map(orderItem => ({
         ...orderItem,
-        title: movies.find(movie => movie.id === orderItem.productId)?.title
+        title: screeningMovies?.find(movie => movie.id === orderItem.productId)?.movie.title,
+        imageUrl: screeningMovies?.find(movie => movie.id === orderItem.productId)?.movie?.imageUrl ?? ''
       })),
       discounts: createOrderDto.discounts
     }
   }
 
   async createPaymentSession(order: OrderWithProducts) {
+    const ids = order?.OrderItem.map(item => item.productId)
+
+    await this.screeningService.validateIds(ids)
+      .catch(err => { throw err })
+
     try {
       const paymentSession = this.paymentService.createPaymentSession({
         orderId: order.id,
-        currency: 'clp',
+        currency: 'ars',
         items: order.OrderItem.map(item => ({
+          imageUrl: item.imageUrl,
           name: item.title,
-          price: item.price,
+          price: item.price * 100,
           quantity: item.quantity
         })),
         discounts: order.discounts
