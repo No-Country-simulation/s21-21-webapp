@@ -8,6 +8,7 @@ import { PaymentsService } from '../payments/payments.service';
 
 import { OrderStatus } from '@prisma/client'
 import { ScreeningService } from '../screening/screening.service';
+import { PaidOrderDto } from './dto/paid-order.dto';
 
 interface OrderWithProducts {
   OrderItem: {
@@ -33,7 +34,6 @@ interface OrderWithProducts {
 export class OrdersService {
 
   constructor(
-    private readonly moviesService: MoviesService,
     private readonly screeningService: ScreeningService,
     private readonly paymentService: PaymentsService,
     private readonly prismaService: PrismaService

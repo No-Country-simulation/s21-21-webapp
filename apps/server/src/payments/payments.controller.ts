@@ -8,6 +8,6 @@ export class PaymentsController {
 
   @Post('stripe-webhook')
   async webhook(@Headers('stripe-signature') signature: string, @Req() req: RawBodyRequest<Request>) {
-    return this.paymentsService.stripeWebhook({ signature, rawBody: req.rawBody! });
+    return await this.paymentsService.stripeWebhook({ signature, rawBody: req.rawBody! });
   }
 }

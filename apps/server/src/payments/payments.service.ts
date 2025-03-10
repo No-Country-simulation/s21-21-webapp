@@ -4,6 +4,8 @@ import Stripe from 'stripe';
 
 import { PaymentSessionDto } from './dto/payment-session.dto';
 import { envs } from './config/envs';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { PaidOrderDto } from 'src/orders/dto/paid-order.dto';
 
 interface LineItem {
   price_data: {
@@ -21,7 +23,9 @@ interface LineItem {
 export class PaymentsService {
   private stripe = new Stripe(envs.STRIPE_SECRET_KEY!)
 
-  constructor() { }
+  constructor(
+    private readonly prismaService: PrismaService
+  ) { }
 
   async createPaymentSession(paymentSessionDto: PaymentSessionDto) {
     const { currency, items, orderId, discounts } = paymentSessionDto;
@@ -71,11 +75,9 @@ export class PaymentsService {
 
   async stripeWebhook({ signature, rawBody }: { signature: string, rawBody: Buffer<ArrayBufferLike> }) {
 
-    const endpointSecret = envs.STRIPE_ENPOINT_SECRET!
-
     let event: Stripe.Event;
 
-    console.log('Hello')
+    const endpointSecret = envs.STRIPE_ENDPOINT_SECRET!
 
     try {
       event = this.stripe.webhooks.constructEvent(
@@ -87,26 +89,44 @@ export class PaymentsService {
       throw error
     }
 
-    return event
+    console.log({ type: event.type })
 
-    // switch (event.type) {
-    //   case 'charge.succeeded':
-    //     const chargeSucceeded = event.data.object;
+    switch (event.type) {
+      case 'charge.succeeded':
+        const chargeSucceeded = event.data.object;
 
-    //     const payload = {
-    //       stripeChargeId: chargeSucceeded.id,
-    //       orderId: chargeSucceeded.metadata.orderId,
-    //       receiptUrl: chargeSucceeded.receipt_url
-    //     }
+        const payload = {
+          stripeChargeId: chargeSucceeded.id,
+          orderId: chargeSucceeded.metadata.orderId,
+          receiptUrl: chargeSucceeded.receipt_url!
+        }
 
-    //   // return await firstValueFrom(this.orderClient.send('paid-order', payload))
-    //   default:
-    //     console.log(`Event ${event.type} not handled`);
-    // }
+        console.log('HEREEEEEEEEEEE')
 
-    // return {
-    //   message: 'success',
-    //   signature
-    // }
+        await this.paidOrder(payload)
+      default:
+        console.log(`Event ${event.type} not handled`);
+    }
+
+    return {
+      message: 'success',
+      signature
+    }
+  }
+
+  private async paidOrder({ orderId, receiptUrl, stripeChargeId }: PaidOrderDto) {
+
+    await this.prismaService.order.update({
+      where: { id: orderId },
+      data: {
+        status: 'PAID',
+        paid: true,
+        paidAt: new Date(),
+        stripeChargeId: stripeChargeId,
+        receiptUrl
+      }
+    })
+
+    return { msg: 'Paid Success' }
   }
 }
