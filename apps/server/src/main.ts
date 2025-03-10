@@ -14,6 +14,7 @@ async function bootstrap() {
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:4000",
+      "https://cine-astas.vercel.app/Login",
     ], // Add your frontend URL(s)
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
@@ -32,7 +33,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document)
+  SwaggerModule.setup("api", app, document);
 
   await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
