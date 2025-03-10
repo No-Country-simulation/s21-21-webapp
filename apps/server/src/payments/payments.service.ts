@@ -89,8 +89,6 @@ export class PaymentsService {
       throw error
     }
 
-    console.log({ type: event.type })
-
     switch (event.type) {
       case 'charge.succeeded':
         const chargeSucceeded = event.data.object;
@@ -100,8 +98,6 @@ export class PaymentsService {
           orderId: chargeSucceeded.metadata.orderId,
           receiptUrl: chargeSucceeded.receipt_url!
         }
-
-        console.log('HEREEEEEEEEEEE')
 
         await this.paidOrder(payload)
       default:
