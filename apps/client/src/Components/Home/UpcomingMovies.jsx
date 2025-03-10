@@ -28,7 +28,7 @@ const UpcomingMovies = () => {
             {upcomingMoviesData.map((movie) => (
               <div
                 key={movie.id}
-                className="flex-shrink-0 px-2 w-[80%] sm:w-[45%] lg:w-[32%] xl:w-[25%]"
+                className="flex-shrink-0 px-2 w-[92%] sm:w-[45%] lg:w-[32%] xl:w-[25%]"
               >
                 <UpcomingMoviesCard
                   cover={movie.cover}

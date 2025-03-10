@@ -13,6 +13,7 @@ dist-ssr
 *.local
 vercel.json
 .vercel
+.env
 
 
 # Editor directories and files
