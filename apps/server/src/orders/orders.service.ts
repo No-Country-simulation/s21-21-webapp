@@ -115,7 +115,7 @@ export class OrdersService {
         items: order.OrderItem.map(item => ({
           imageUrl: item.imageUrl,
           name: item.title,
-          price: item.price,
+          price: item.price * 100,
           quantity: item.quantity
         })),
         discounts: order.discounts

@@ -36,6 +36,9 @@ export class ScreeningService {
           in: ids
         },
       },
+      include: {
+        movie: true
+      }
     });
 
     if (movies.length !== ids.length) throw new NotFoundException('Some movies not found')
