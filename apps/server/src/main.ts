@@ -12,11 +12,7 @@ async function bootstrap() {
 
   const logger = new Logger()
 
-  app.enableCors({
-    origin: "https://cine-astas.vercel.app",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    credentials: true,
-  });
+  app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe());
 
