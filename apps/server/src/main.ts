@@ -13,12 +13,7 @@ async function bootstrap() {
   const logger = new Logger()
 
   app.enableCors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "http://localhost:4000",
-      "https://cine-astas.vercel.app",
-    ], // Add your frontend URL(s)
+    origin: "https://cine-astas.vercel.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
   });
