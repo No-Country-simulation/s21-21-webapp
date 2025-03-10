@@ -41,7 +41,7 @@ export class MoviesService {
       },
     });
 
-    if (movies.length !== ids.length) throw new NotFoundException('Some movie is not found')
+    if (movies.length !== ids.length) throw new NotFoundException('Some movies not found')
 
     return movies
   }
