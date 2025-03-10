@@ -15,6 +15,6 @@ import { ScreeningModule } from 'src/screening/screening.module';
     ScreeningModule,
     PrismaModule,
     PaymentsModule
-  ]
+  ],
 })
 export class OrdersModule {}
