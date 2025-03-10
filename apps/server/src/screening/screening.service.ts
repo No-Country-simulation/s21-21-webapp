@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateScreeningDto } from "./dto/create-screening.dto";
 import { UpdateScreeningDto } from "./dto/update-screening.dto";
@@ -25,5 +25,21 @@ export class ScreeningService {
 
   remove(id: string) {
     return this.prisma.screening.delete({ where: { id } });
+  }
+
+  async validateIds(ids: string[]) {
+    ids = Array.from(new Set(ids));
+
+    const movies = await this.prisma.screening.findMany({
+      where: {
+        id: {
+          in: ids
+        },
+      },
+    });
+
+    if (movies.length !== ids.length) throw new NotFoundException('Some movies not found')
+
+    return movies
   }
 }

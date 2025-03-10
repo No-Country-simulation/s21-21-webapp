@@ -6,5 +6,6 @@ import { PrismaService } from "../prisma/prisma.service";
 @Module({
   controllers: [ScreeningController],
   providers: [ScreeningService, PrismaService],
+  exports: [ScreeningService]
 })
 export class ScreeningModule {}
