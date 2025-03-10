@@ -32,15 +32,16 @@ enum OrderStatus {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  email     String    @unique
-  password  String?
-  name      String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  bookings  Booking[]
-  googleAuthToken      String?
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  email           String         @unique
+  password        String?
+  name            String
+  role            Role           @default(USER)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  bookings        Booking[]
+  notifications   Notification[]
+  googleAuthToken String?
 }
 
 model Image {
@@ -137,4 +138,21 @@ model Order {
   OrderItem OrderItem[]
 
   @@map("Orders")
+}
+
+model Notification {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  message   String
+  type      NotificationType
+  createdAt DateTime         @default(now())
+  isRead    Boolean          @default(false)
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMATION
+  REMINDER
+  CANCELLATION
+  PROMOTION
 }
