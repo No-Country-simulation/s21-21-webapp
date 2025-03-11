@@ -77,12 +77,12 @@ model Movie {
 }
 
 model Hall {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   capacity   Int
   screenings Screening[]
+  seats      Seat[]    // Relación con asientos
 }
-
 model Screening {
   id       String    @id @default(auto()) @map("_id") @db.ObjectId
   movieId  String    @db.ObjectId
@@ -98,14 +98,13 @@ model Booking {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   userId      String        @db.ObjectId
   screeningId String        @db.ObjectId
-  seats       Int
   totalPrice  Float
   status      BookingStatus @default(PENDING)
   createdAt   DateTime      @default(now())
   user        User          @relation(fields: [userId], references: [id])
   screening   Screening     @relation(fields: [screeningId], references: [id])
+  bookedSeats SeatBooking[] // Relación con los asientos reservados
 }
-
 model OrderItem {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   productId String
@@ -148,6 +147,32 @@ model Notification {
   type      NotificationType
   createdAt DateTime         @default(now())
   isRead    Boolean          @default(false)
+}
+
+model Seat {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  number     Int
+  row        String    // Por ejemplo: A, B, C...
+  hallId     String    @db.ObjectId
+  hall       Hall      @relation(fields: [hallId], references: [id])
+  isActive   Boolean   @default(true)  // Para desactivar asientos en caso de mantenimiento
+  bookings   SeatBooking[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([number, row, hallId]) // Evitar duplicados de asiento en la misma sala
+}
+
+model SeatBooking {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  seatId      String    @db.ObjectId
+  bookingId   String    @db.ObjectId
+  seat        Seat      @relation(fields: [seatId], references: [id])
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([seatId, bookingId]) // Evitar que el mismo asiento se reserve más de una vez
 }
 
 enum NotificationType {

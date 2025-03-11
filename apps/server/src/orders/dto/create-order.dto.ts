@@ -1,56 +1,29 @@
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUUID,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-import { OrderItemDto } from './order-item.dto';
+import { IsString, IsArray, IsOptional } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
-
-export class Discount {
-  @ApiProperty({
-    description: 'Coupon code for the discount',
-    example: 'SUMMER20',
-  })
+export class OrderItemDto {
+  @ApiProperty({ example: "60d4a0e7a48b8c1e9c5e8b4d" })
   @IsString()
-  @IsNotEmpty()
-  coupon: string;
+  productId: string;
+
+  @ApiProperty({
+    example: ["60d4a0e7a48b8c1e9c5e8b4e", "60d4a0e7a48b8c1e9c5e8b4f"],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  seatIds: string[];
 }
 
 export class CreateOrderDto {
-  @ApiProperty({
-    description: 'Unique identifier for the buyer user',
-    example: 'b0a5f16d-f346-4f2c-9dbe-c9c25a7c7b68',
-  })
-  @IsUUID()
-  @IsNotEmpty()
-  buyerUserId: string;
-
-  @ApiProperty({
-    description: 'List of items in the order',
-    type: [OrderItemDto],
-  })
+  @ApiProperty({ type: [OrderItemDto] })
   @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => OrderItemDto)
   items: OrderItemDto[];
 
-  @ApiPropertyOptional({
-    description: 'List of discounts applied to the order',
-    type: [Discount],
-  })
+  @ApiProperty({ example: "60d4a0e7a48b8c1e9c5e8b4c" })
+  @IsString()
+  buyerUserId: string;
+
+  @ApiProperty({ required: false })
   @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => Discount)
-  discounts: Discount[];
+  discounts?: any;
 }

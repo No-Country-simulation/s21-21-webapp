@@ -1,26 +1,24 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsString, IsEnum, IsPositive } from "class-validator";
-import { BookingStatus } from "../entities/booking-status.enum";
+import { IsString, IsNumber, IsPositive, IsArray } from "class-validator";
 
 export class CreateBookingDto {
-  @ApiProperty({ example: "user123" })
+  @ApiProperty({ example: "60d4a0e7a48b8c1e9c5e8b4c" })
   @IsString()
   userId: string;
 
-  @ApiProperty({ example: "screening456" })
+  @ApiProperty({ example: "60d4a0e7a48b8c1e9c5e8b4d" })
   @IsString()
   screeningId: string;
 
-  @ApiProperty({ example: 2 })
-  @IsInt()
-  @IsPositive()
-  seats: number;
+  @ApiProperty({
+    example: ["60d4a0e7a48b8c1e9c5e8b4e", "60d4a0e7a48b8c1e9c5e8b4f"],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  seatIds: string[];
 
   @ApiProperty({ example: 20.0 })
+  @IsNumber()
   @IsPositive()
   totalPrice: number;
-
-  @ApiProperty({ example: "PENDING", enum: BookingStatus })
-  @IsEnum(BookingStatus)
-  status: BookingStatus;
 }
