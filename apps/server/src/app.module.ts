@@ -11,6 +11,7 @@ import { PaymentsModule } from "./payments/payments.module";
 import { OrdersModule } from "./orders/orders.module";
 import { ConfigModule } from "@nestjs/config";
 import { NotificationsModule } from './notifications/notifications.module';
+import { SeatModule } from './seat/seat.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     PaymentsModule,
     OrdersModule,
     NotificationsModule,
+    SeatModule,
   ],
 })
 export class AppModule {}
