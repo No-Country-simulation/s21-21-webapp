@@ -1,14 +1,13 @@
-import { Body, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
-import { MoviesService } from "../movies/movies.service";
-
-import { CreateOrderDto, OrderItemDto } from "./dto/create-order.dto";
+import { CreateOrderDto } from "./dto/create-order.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { PaymentsService } from "../payments/payments.service";
 
 import { OrderStatus } from "@prisma/client";
 import { ScreeningService } from "../screening/screening.service";
 import { PaidOrderDto } from "./dto/paid-order.dto";
+import { OrderItemDto } from "./dto/order-item.dto";
 
 interface OrderWithProducts {
   OrderItem: {
