@@ -1,11 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNumber, IsPositive } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsArray, IsMongoId, IsString } from "class-validator";
 
 export class OrderItemDto {
-  @ApiProperty({
-    description: 'The ID of the product being ordered',
-    example: '507f1f77bcf86cd799439011',
-  })
+  @ApiProperty({ example: "60d4a0e7a48b8c1e9c5e8b4d" })
   @IsMongoId()
   productId: string;
+
+  @ApiProperty({
+    example: ["60d4a0e7a48b8c1e9c5e8b4e", "60d4a0e7a48b8c1e9c5e8b4f"],
+  })
+  @IsArray()
+  @IsString({ each: true })
+  seatIds: string[];
 }
