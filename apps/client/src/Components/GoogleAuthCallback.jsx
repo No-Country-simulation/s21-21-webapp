@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-//import { googleLogin } from "../Constants/googlelogin";
 
 function GoogleAuthCallback() {
   const navigate = useNavigate();
@@ -9,7 +8,6 @@ function GoogleAuthCallback() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Get token from URL parameters
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");
 
@@ -17,25 +15,18 @@ function GoogleAuthCallback() {
       console.error("No token found in URL");
       setError("Authentication failed: No token received");
       setLoading(false);
-      // Wait briefly before redirecting
       setTimeout(() => navigate("/login"), 2000);
       return;
     }
 
-    // Handle the token from the OAuth callback
     const handleOAuthCallback = async () => {
       try {
-        // For OAuth flow, the token is already a JWT
-        // Skip the Google verification and just use the token directly
         localStorage.setItem("token", token);
 
-        // Try to decode the JWT to get user info
-        // Note: This is just for extraction, not verification
         const base64Url = token.split(".")[1];
         const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
         const payload = JSON.parse(window.atob(base64));
 
-        // Extract user info from token if available
         if (payload.email) {
           const user = {
             email: payload.email,
@@ -44,7 +35,6 @@ function GoogleAuthCallback() {
           localStorage.setItem("user", JSON.stringify(user));
         }
 
-        // Redirect to dashboard
         navigate("/dashboard");
       } catch (err) {
         console.error("Error processing OAuth callback:", err);
