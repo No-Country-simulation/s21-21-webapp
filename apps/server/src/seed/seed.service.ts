@@ -22,12 +22,12 @@ export class SeedService {
   ){}
 
   async executeSeed () {
+    await this.prismaService.seatBooking.deleteMany()
     await this.prismaService.seat.deleteMany()
     await this.prismaService.booking.deleteMany()
     await this.prismaService.screening.deleteMany()
     await this.prismaService.hall.deleteMany()
     await this.prismaService.movie.deleteMany()
-    await this.prismaService.seatBooking.deleteMany()
     
     const halls = await this.createHalls()
     const seats = await this.createSeats(halls)

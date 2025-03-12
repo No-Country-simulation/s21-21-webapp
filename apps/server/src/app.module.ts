@@ -30,7 +30,7 @@ import { SeedModule } from './seed/seed.module';
     OrdersModule,
     NotificationsModule,
     SeatModule,
-    SeedModule,
+    ...(process.env.NODE_ENV !== 'production' ? [SeedModule] : []),
   ],
 })
 export class AppModule {}

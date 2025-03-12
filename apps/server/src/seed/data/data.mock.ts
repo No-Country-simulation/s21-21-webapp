@@ -179,14 +179,5 @@ export const mockData = {
     {
       userId: "67c1d4c0d00cf3a083f9ea6a",
     },
-  ],
-  seatBooking: {
-    id: "seatBooking1",
-    seatId: "seat1",
-    bookingId: "booking1",
-    seat: { id: "seat1", number: 1, row: "A", hallId: "hall1" },
-    booking: { id: "booking1", totalPrice: 21.0 },
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }
+  ]
 };
