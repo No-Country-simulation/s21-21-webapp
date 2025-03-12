@@ -1,23 +1,31 @@
-import { useMutation } from "@tanstack/react-query";
+import useAuthStore from "../store/authStore";
+import { fetchData } from "../utils/fetchData";
 
-const API_BASE_URL = "http://localhost:3000";
+export const googleLogin = async (token) => {
+  try {
+    const response = await fetchData(
+      "/auth/google-login",
+      "POST",
+      { token },
+      null,
+      true
+    );
 
-export const googleLogin = () => {
-  return useMutation(async (token) => {
-    const response = await fetch(`${API_BASE_URL}/api/auth/google-login`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
+    const data = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error logging in with Google");
+      throw new Error(data.message || "Error logging in with Google");
     }
 
-    return response.json();
-  });
+    useAuthStore.getState().login({
+      user: data.user,
+      access_token: data.access_token,
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Google login error:", error);
+    throw error;
+  }
 };
+

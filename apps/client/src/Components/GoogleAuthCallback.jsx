@@ -35,7 +35,7 @@ function GoogleAuthCallback() {
           localStorage.setItem("user", JSON.stringify(user));
         }
 
-        navigate("/dashboard");
+        navigate("/");
       } catch (err) {
         console.error("Error processing OAuth callback:", err);
         setError("Authentication failed: " + (err.message || "Unknown error"));

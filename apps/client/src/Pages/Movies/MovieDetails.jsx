@@ -141,8 +141,6 @@ const MovieDetails = () => {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error: {error.message}</p>;
   if (!movie) return <p>Película no encontrada</p>;
-  if (screeningsLoading) return <p>Cargando horarios...</p>;
-  if (screeningsError) return <p>Error al cargar horarios</p>;
 
   const getYouTubeVideoId = (url) => {
     const videoUrl = new URL(url);
@@ -155,6 +153,14 @@ const MovieDetails = () => {
   };
 
   const videoId = getYouTubeVideoId(movie.trailerUrl);
+
+  const movieRatingsMap = {
+    G: "A", // Apta para todo público
+    PG: "A", // Apta para todo público (con supervisión)
+    "PG-13": "B", // Mayores de 13 años
+    R: "C", // Mayores de 17 años
+    "NC-17": "D", // Solo adultos
+  };
 
   return (
     <>
@@ -180,29 +186,39 @@ const MovieDetails = () => {
             </p>
             <p>
               <strong>Clasificación:</strong>{" "}
-              {movie.clasificacion || "Sin clasificacion"}
+              {movieRatingsMap[movie.classification] || "Sin clasificación"}
             </p>
             <p>
-              <strong>Formato:</strong> {movie.format || "2D"}
+              <strong>Formato:</strong> {movie.format.join(", ") || "2D"}
             </p>
             <p>
               <strong>Fecha de estreno:</strong>{" "}
-              {movie.releaseDate || "Sin fecha de estreno"}
+              {new Date(movie.releaseDate).toLocaleDateString("es-ES") ||
+                "Sin fecha de estreno"}
             </p>
             <p className="max-w-2xl">{movie.description}</p>
           </div>
         </div>
 
-        <div className="mt-8">
-          <div className="flex flex-row gap-x-4 items-center mb-4">
-            <Tickets size={40} strokeWidth={1.5} />
-            <h1 className="text-3xl">Horarios Disponibles</h1>
-          </div>
-          {fechasUnicas.length === 0 ? (
-            <p className="p-4 bg-gray-200 rounded-md text-center text-gray-700">
-              No hay funciones disponibles para esta película
-            </p>
-          ) : (
+        {screeningsLoading ? (
+          <p className="p-4 bg-gray-200 rounded-md text-center text-gray-700">
+            Cargando horarios...
+          </p>
+        ) : screeningsError ? (
+          <p className="p-4 bg-red-200 rounded-md text-center text-red-700">
+            Error al cargar horarios
+          </p>
+        ) : (
+          <div className="mt-8">
+            <div className="flex flex-row gap-x-4 items-center mb-4">
+              <Tickets size={40} strokeWidth={1.5} />
+              <h1 className="text-3xl">Horarios Disponibles</h1>
+            </div>
+            {fechasUnicas.length === 0 ? (
+              <p className="p-4 bg-gray-200 rounded-md text-center text-gray-700">
+                No hay funciones disponibles para esta película
+              </p>
+            ) : (
             <>
               <div className="flex overflow-x-auto gap-4 pb-4 mb-4">
                 {fechasUnicas.map((fecha) => (
@@ -222,7 +238,7 @@ const MovieDetails = () => {
                 ))}
               </div>
 
-              <div className="bg-gray-200 p-4 rounded-md">
+             <div className="bg-gray-200 p-4 rounded-md">
                 {screenings.length === 0 ? (
                   <p className="text-center text-gray-700">
                     No hay horarios disponibles para esta fecha
@@ -241,9 +257,10 @@ const MovieDetails = () => {
                   </div>
                 )}
               </div>
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-row gap-x-4 items-center my-4">

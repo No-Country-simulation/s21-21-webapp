@@ -55,6 +55,14 @@ const Movies = () => {
     return <p>No se encontraron películas.</p>;
   }
 
+  const movieRatingsMap = {
+    G: "A", // Apta para todo público
+    PG: "A", // Apta para todo público (con supervisión)
+    "PG-13": "B", // Mayores de 13 años
+    R: "C", // Mayores de 17 años
+    "NC-17": "D", // Solo adultos
+  };
+
   return (
     <section id="Cartelera" className="container mx-auto px-2">
       <h1 className="text-center">Películas en Cartelera</h1>
@@ -65,11 +73,14 @@ const Movies = () => {
             key={movie.id}
             cover={movie.imageUrl}
             title={movie.title}
-            releaseDate={movie.releaseDate || "Sin fecha"}
+            releaseDate={
+              new Date(movie.releaseDate).toLocaleDateString("es-ES") ||
+              "Sin fecha"
+            }
             duration={movie.duration}
             genre={movie.genre}
-            rating={movie.rating || "B"}
-            format={movie.formats || "2D"}
+            rating={movieRatingsMap[movie.classification]}
+            format={movie.format || "2D"}
             // time={movie.formattedTimes}
           />
         ))}

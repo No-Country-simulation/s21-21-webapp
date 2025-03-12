@@ -1,4 +1,4 @@
-export const fetchData = async (path, method, body, token) => {
+export const fetchData = async (path, method, body, token, withCredentials = false) => {
   try {
     const URL = import.meta.env.VITE_BASE_URL;
     const headers = {};
@@ -12,6 +12,10 @@ export const fetchData = async (path, method, body, token) => {
     } else if (body && method !== "GET") {
       headers["Content-Type"] = "application/json";
       options.body = JSON.stringify(body);
+    }
+
+    if (withCredentials) {
+      options.credentials = "include"; 
     }
 
     const res = await fetch(`${URL}${path}`, options);
