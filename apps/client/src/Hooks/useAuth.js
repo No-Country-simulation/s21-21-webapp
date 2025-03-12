@@ -36,40 +36,47 @@ export const useRegister = () => {
 };
 
 export const useLogin = () => {
-    const login = useAuthStore((state) => state.login);
-    const navigate = useNavigate();
-  
-    const loginMutation = useMutation({
-      mutationFn: async (userData) => {
-        const response = await fetchData("/auth/login", "POST", {
-          email: userData.email,
-          password: userData.password,
-        });
-        if (!response.ok) {
-          throw new Error(`Error al iniciar sesión: ${response.status}`);
-        }
-  
-        const data = await response.json();
-  
-        if (data.access_token && data.user) {
-          return {
-            user: data.user,
-            accessToken: data.access_token,
-          };
-        } else {
-          throw new Error("No se recibió un token válido del servidor");
-        }
-      },
-      onSuccess: (data) => {
-        login({ user: data.user, access_token: data.accessToken });
-        toast.success("Inicio de sesión exitoso.");
-        navigate("/");
-      },
-      onError: (error) => {
-        console.error("Error iniciando sesión:", error);
-        toast.error(`Error al iniciar sesión: ${error.message}`);
-      },
-    });
-  
-    return loginMutation;
-  }
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
+
+  const loginMutation = useMutation({
+    mutationFn: async (userData) => {
+      const response = await fetchData("/auth/login", "POST", {
+        email: userData.email,
+        password: userData.password,
+      });
+      if (!response.ok) {
+        throw new Error(`Error al iniciar sesión: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.access_token && data.user) {
+        return {
+          user: data.user,
+          accessToken: data.access_token,
+        };
+      } else {
+        throw new Error("No se recibió un token válido del servidor");
+      }
+    },
+    onSuccess: (data) => {
+      // Almacenar el userId y el token en el localStorage
+      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("userId", data.user.id); // Asegúrate de que data.user.id sea el userId
+
+      // Actualizar el estado de autenticación
+      login({ user: data.user, access_token: data.accessToken });
+
+      // Mostrar mensaje de éxito y redirigir
+      toast.success("Inicio de sesión exitoso.");
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Error iniciando sesión:", error);
+      toast.error(`Error al iniciar sesión: ${error.message}`);
+    },
+  });
+
+  return loginMutation;
+};

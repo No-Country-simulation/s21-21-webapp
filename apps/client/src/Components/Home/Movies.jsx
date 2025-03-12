@@ -4,7 +4,7 @@ import MovieCard from "./MovieCard";
 
 const Movies = () => {
   const movies = useMovies();
-  const screenings = useScreenings();
+  const screenings = useScreenings(); // No se pasa ningún screeningId
   const [moviesWithTimes, setMoviesWithTimes] = useState([]);
 
   useEffect(() => {

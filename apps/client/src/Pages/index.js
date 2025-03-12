@@ -4,8 +4,8 @@ import { Login } from "./Login/Login";
 import { Movies } from "./Movies/Movies";
 import { NewMovie } from "./NewMovie/NewMovie";
 import { SitSelector } from "./SitSelector/SitSelector";
-import { Payments } from "./Payments/Payments";
+import { PaymentsSuccess } from "./Payments/PaymentsSuccess"
 import { NotFound } from "./NotFound/NotFound";
 import MovieDetails from "./Movies/MovieDetails";
 
-export { Home, Register, Login, Movies, NewMovie, SitSelector, Payments, NotFound, MovieDetails };
+export { Home, Register, Login, Movies, NewMovie, SitSelector, PaymentsSuccess, NotFound, MovieDetails };
