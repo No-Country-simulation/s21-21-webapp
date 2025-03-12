@@ -6,7 +6,7 @@ import {
   Movies,
   NewMovie,
   SitSelector,
-  Payment,
+  PaymentsSuccess,
   NotFound,
   MovieDetails,
 } from "./Pages";
@@ -43,8 +43,8 @@ const router = createBrowserRouter([
     element: <SitSelector />,
   },
   {
-    path: "/Payments",
-    element: <Payment />,
+    path: "/payments/success",
+    element: <PaymentsSuccess />,
   },
   {
     path: "*",

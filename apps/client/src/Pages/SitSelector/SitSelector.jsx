@@ -132,7 +132,7 @@ export const SitSelector = () => {
       alert("Por favor inicie sesión para realizar la compra");
       return;
     }
-
+  
     try {
       const orderData = {
         items: [
@@ -141,25 +141,37 @@ export const SitSelector = () => {
             seatIds: selectedSeats.map(seat => seat.id)
           }
         ],
-        buyerUserId: userId // Usar el userId autenticado
+        buyerUserId: userId
       };
-
+  
       const response = await fetchData("/orders/create-order", "POST", orderData);
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error al procesar la compra");
       }
-
-      const orderResult = await response.json();
-      setPurchaseCompleted(true);
+  
+      const { order, paymentSession } = await response.json();
+  
+      // Redirigir al usuario a la página de pago de Stripe
+      window.location.href = paymentSession.url;
+  
+      // Guardar el orderId en localStorage para usarlo después del pago
+      localStorage.setItem("lastOrderId", order.id);
     } catch (err) {
       console.error("Error en la compra:", err);
       alert(`Error: ${err.message}`);
     }
   };
 
-
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get("payment_status");
+  
+    if (paymentStatus === "success") {
+      setPurchaseCompleted(true);
+    }
+  }, []);
 
   if (isLoadingScreening || isLoading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -175,7 +187,7 @@ export const SitSelector = () => {
     </div>
   );
 
-    return (
+  return (
     <>
       <Navbar />
       <div className="min-h-screen w-full flex flex-col items-center p-4 bg-cover bg-center bg-no-repeat" 
