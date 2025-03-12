@@ -242,7 +242,7 @@ export const SitSelector = () => {
                           key={seatIndex}
                           className={`
                             w-8 h-8 rounded flex items-center justify-center text-xs
-                            ${!seat ? 'bg-transparent cursor-default' : 
+                            ${!seat ? 'bg-gray-400 cursor-default' : 
                               seat.status === "occupied" ? 'bg-gray-400 cursor-not-allowed' :
                               selectedSeats.some(s => s.id === seat.id) ? 'bg-Success text-white' : 'bg-btn-primary hover:bg-blue-600 text-white'}
                           `}
