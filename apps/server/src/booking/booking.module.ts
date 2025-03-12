@@ -9,5 +9,6 @@ import { SeatModule } from "../seat/seat.module";
   imports: [NotificationsModule, SeatModule],
   controllers: [BookingController],
   providers: [BookingService, PrismaService],
+  exports: [BookingService]
 })
 export class BookingModule {}
