@@ -152,6 +152,14 @@ const MovieDetails = () => {
 
   const videoId = getYouTubeVideoId(movie.trailerUrl);
 
+  const movieRatingsMap = {
+    G: "A", // Apta para todo público
+    PG: "A", // Apta para todo público (con supervisión)
+    "PG-13": "B", // Mayores de 13 años
+    R: "C", // Mayores de 17 años
+    "NC-17": "D", // Solo adultos
+  };
+
   return (
     <>
       <Navbar />
@@ -176,14 +184,15 @@ const MovieDetails = () => {
             </p>
             <p>
               <strong>Clasificación:</strong>{" "}
-              {movie.clasificacion || "Sin clasificacion"}
+              {movieRatingsMap[movie.classification] || "Sin clasificación"}
             </p>
             <p>
-              <strong>Formato:</strong> {movie.format || "2D"}
+              <strong>Formato:</strong> {movie.format.join(", ") || "2D"}
             </p>
             <p>
               <strong>Fecha de estreno:</strong>{" "}
-              {movie.releaseDate || "Sin fecha de estreno"}
+              {new Date(movie.releaseDate).toLocaleDateString("es-ES") ||
+                "Sin fecha de estreno"}
             </p>
             <p className="max-w-2xl">{movie.description}</p>
           </div>
