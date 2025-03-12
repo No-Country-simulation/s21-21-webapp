@@ -62,6 +62,16 @@ export const SitSelector = () => {
   }, [screeningId]);
 
   useEffect(() => {
+    if (screening && selectedSeats.length > 0) {
+      // Calcular el total sumando el precio de cada asiento seleccionado
+      const total = selectedSeats.reduce((acc, seat) => acc + screening.price, 0);
+      setTotalPrice(total);
+    } else {
+      setTotalPrice(0);
+    }
+  }, [selectedSeats, screening]);
+
+  useEffect(() => {
     if (!availableSeats.length || !screening) return;
   
     try {
