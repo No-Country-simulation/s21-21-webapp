@@ -19,11 +19,12 @@ export const useMovies = () => {
   });
 };
 
-export const useScreenings = () => {
+export const useScreenings = (screeningId = null) => {
   return useQuery({
-    queryKey: ["screenings"],
+    queryKey: ["screenings", screeningId],
     queryFn: async () => {
-      const response = await fetchData(`/screening`, "GET");
+      const url = screeningId ? `/screening/${screeningId}` : "/screening";
+      const response = await fetchData(url, "GET");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

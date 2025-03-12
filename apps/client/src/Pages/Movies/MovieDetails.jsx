@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Film, Tickets, Video } from "lucide-react";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
@@ -7,6 +7,7 @@ import { useMovies, useScreenings } from "../../Hooks/useMovies";
 
 const MovieDetails = () => {
   const { title: encodedTitle } = useParams();
+  const navigate = useNavigate();
   const title = decodeURIComponent(encodedTitle);
   const { data: moviesData, isLoading, isError, error } = useMovies();
   const [movie, setMovie] = useState(null);
@@ -124,14 +125,17 @@ const MovieDetails = () => {
     }
   }, [movie, screeningsData]);
 
-  const handleFechaClick = (fechaKey) => {
-    setFechaSeleccionada(fechaKey);
-    const fechaSeleccionadaObj = fechasUnicas.find(
-      (fecha) => fecha.key === fechaKey
-    );
-    if (fechaSeleccionadaObj) {
-      setScreenings(fechaSeleccionadaObj.horarios);
-    }
+  // const handleFechaClick = (fechaKey) => {
+  //   setFechaSeleccionada(fechaKey);
+  //   const fechaSeleccionadaObj = fechasUnicas.find(
+  //     (fecha) => fecha.key === fechaKey
+  //   );
+  //   if (fechaSeleccionadaObj) {
+  //     setScreenings(fechaSeleccionadaObj.horarios);
+  //   }
+  // };
+  const handleHorarioClick = (screeningId) => {
+    navigate(`/sitSelector/${screeningId}`);
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -204,7 +208,7 @@ const MovieDetails = () => {
                 {fechasUnicas.map((fecha) => (
                   <button
                     key={fecha.key}
-                    onClick={() => handleFechaClick(fecha.key)}
+                    onClick={() => handleHorarioClick(fecha.key)}
                     className={`flex-shrink-0 border-2 ${
                       fechaSeleccionada === fecha.key
                         ? "border-black"
@@ -228,6 +232,7 @@ const MovieDetails = () => {
                     {screenings.map((horario) => (
                       <div
                         key={horario.id}
+                        onClick={() => handleHorarioClick(horario.id)}
                         className="inline-block border border-gray-400 rounded px-4 py-2 bg-white cursor-pointer"
                       >
                         {horario.time}

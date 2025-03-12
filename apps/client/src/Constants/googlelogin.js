@@ -1,29 +1,23 @@
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 
 const API_BASE_URL = "http://localhost:3000";
 
-export const googleLogin = async (token) => {
-  try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/auth/google-login`,
-      { token },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+export const googleLogin = () => {
+  return useMutation(async (token) => {
+    const response = await fetch(`${API_BASE_URL}/api/auth/google-login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
 
-    return response.data;
-  } catch (error) {
-    console.error("Google login error:", error);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error logging in with Google");
+    }
 
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "Error logging in with Google";
-
-    throw new Error(errorMessage);
-  }
+    return response.json();
+  });
 };
