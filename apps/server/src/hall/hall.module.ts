@@ -6,5 +6,6 @@ import { PrismaService } from "../prisma/prisma.service";
 @Module({
   controllers: [HallController],
   providers: [HallService, PrismaService],
+  exports: [HallService]
 })
 export class HallModule {}
