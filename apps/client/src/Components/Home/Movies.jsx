@@ -8,8 +8,6 @@ const Movies = () => {
   const [moviesWithTimes, setMoviesWithTimes] = useState([]);
 
   useEffect(() => {
-    console.log("Películas obtenidas:", movies.data);
-    console.log("Screenings obtenidos:", screenings.data);
     if (movies.data && screenings.data) {
       // Procesar las películas y sus horarios
       const processedMovies = movies.data.map((movie) => {

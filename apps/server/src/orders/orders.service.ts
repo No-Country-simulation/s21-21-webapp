@@ -42,38 +42,37 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto) {
     const { items, buyerUserId } = createOrderDto;
-
+  
     const screeningIds = items.map((item) => item.productId);
     const allSeatIds = items.flatMap((item) => item.seatIds);
-
+  
     // Validar ids de proyecciones
     const screeningMovies = await this.screeningService
       .validateIds(screeningIds)
       .catch((err) => {
         throw err;
       });
-
+  
     // Validar que los asientos estén disponibles
     await this.validateSeatsAvailability(items);
-
+  
     // Calcular total basado en precio de proyecciones y cantidad de asientos
     const totalAmount = screeningMovies.reduce((acc, screening) => {
       const orderItem = items.find((item) => item.productId === screening.id);
-      // Añadir verificación para evitar undefined
       if (!orderItem) {
         throw new Error(`Order item for screening ${screening.id} not found`);
       }
       const seatCount = orderItem.seatIds.length;
       const totalPrice = screening.price * seatCount;
-
+  
       return acc + totalPrice;
     }, 0);
-
+  
     // Total de asientos
     const totalItems = items.reduce((acc, orderItem) => {
       return acc + orderItem.seatIds.length;
     }, 0);
-
+  
     // Crear orden con transacción para garantizar integridad
     const order = await this.prismaService.$transaction(async (prisma) => {
       // Crear la orden
@@ -110,16 +109,15 @@ export class OrdersService {
           },
         },
       });
-
+  
       // Crear reservas para cada proyección
       for (const item of items) {
         const screening = screeningMovies.find((s) => s.id === item.productId);
-
-        // Verificar que screening existe
+  
         if (!screening) {
           throw new Error(`Screening with ID ${item.productId} not found`);
         }
-
+  
         // Crear booking para cada proyección
         const booking = await prisma.booking.create({
           data: {
@@ -129,7 +127,7 @@ export class OrdersService {
             status: "PENDING",
           },
         });
-
+  
         // Crear relaciones con asientos
         for (const seatId of item.seatIds) {
           await prisma.seatBooking.create({
@@ -140,10 +138,10 @@ export class OrdersService {
           });
         }
       }
-
+  
       return newOrder;
     });
-
+  
     return {
       ...order,
       OrderItem: order.OrderItem.map((orderItem) => {

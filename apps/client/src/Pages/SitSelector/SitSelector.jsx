@@ -4,6 +4,7 @@ import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
 import { useScreenings } from "../../Hooks/useMovies";
 import { fetchData } from "../../utils/fetchData";
+import useAuthStore from "../../store/authStore"; // Importar el authStore
 
 export const SitSelector = () => {
   const { screeningId } = useParams();
@@ -18,9 +19,11 @@ export const SitSelector = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [userId, setUserId] = useState("user123"); // Esto debería venir de tu sistema de autenticación
-  const [uniqueRows, setUniqueRows] = useState([]); // Estado para almacenar las filas únicas
-  const [purchaseCompleted, setPurchaseCompleted] = useState(false); // Estado para manejar si la compra se completó
+  const [uniqueRows, setUniqueRows] = useState([]);
+  const [purchaseCompleted, setPurchaseCompleted] = useState(false);
+
+  // Obtener el userId desde el authStore
+  const userId = useAuthStore((state) => state.user?.id);
 
   // Cargar los asientos disponibles para la proyección específica
   useEffect(() => {
@@ -36,7 +39,17 @@ export const SitSelector = () => {
         }
         
         const data = await response.json();
-        setAvailableSeats(data);
+        console.log(data)
+        // Marcar los asientos ocupados con el estado "occupied"
+        const seatsWithStatus = data.map(seat => {
+          if (seat.isOccupied) { // Asegúrate de que el backend devuelva un campo isOccupied
+            return { ...seat, status: "occupied" };
+          } else {
+            return { ...seat, status: "available" };
+          }
+        });
+    
+        setAvailableSeats(seatsWithStatus);
       } catch (err) {
         console.error("Error al cargar asientos disponibles:", err);
         setError(err.message);
@@ -48,44 +61,45 @@ export const SitSelector = () => {
     fetchAvailableSeats();
   }, [screeningId]);
 
-  // Crear la cuadrícula de asientos cuando los datos estén disponibles
   useEffect(() => {
     if (!availableSeats.length || !screening) return;
-
+  
     try {
       // Encontrar las filas únicas y ordenarlas
       const rows = [...new Set(availableSeats.map(seat => seat.row))].sort();
       setUniqueRows(rows); // Guardar las filas únicas en el estado
-      
-      // Crear grid de asientos con 10 columnas
+  
+      // Encontrar el número máximo de asientos en cualquier fila
+      const maxSeatsPerRow = Math.max(...rows.map(row => {
+        return availableSeats.filter(seat => seat.row === row).length;
+      }));
+  
+      // Crear grid de asientos con el número máximo de asientos por fila
       const grid = rows.map(row => {
         // Filtrar asientos de la fila actual
         const rowSeats = availableSeats.filter(seat => seat.row === row);
         
-        // Crear un array de 10 asientos por fila
-        const seats = Array.from({ length: 10 }, (_, index) => {
+        // Crear un array con el número máximo de asientos por fila
+        const seats = Array.from({ length: maxSeatsPerRow }, (_, index) => {
           const seat = rowSeats.find(s => s.number === index + 1);
-          return seat ? { ...seat, status: "available" } : null;
+          if (seat) {
+            // Si el asiento está ocupado, marcarlo como "occupied"
+            return { ...seat, status: seat.status || "available" };
+          } else {
+            // Si no hay asiento en esta posición, devolver null
+            return null;
+          }
         });
         
         return seats;
       });
-      
+  
       setSeatsGrid(grid);
     } catch (err) {
       console.error("Error al procesar asientos:", err);
       setError("Error al procesar la configuración de asientos");
     }
   }, [availableSeats, screening]);
-
-  // Actualizar precio total cuando cambian los asientos seleccionados
-  useEffect(() => {
-    if (screening && selectedSeats.length > 0) {
-      setTotalPrice(selectedSeats.length * screening.price);
-    } else {
-      setTotalPrice(0);
-    }
-  }, [selectedSeats, screening]);
 
   // Manejar selección de asiento
   const toggleSeat = (seat) => {
@@ -104,13 +118,12 @@ export const SitSelector = () => {
 
   // Crear una reserva con los asientos seleccionados
   const handlePurchase = async () => {
-    if (selectedSeats.length === 0) {
-      alert("Por favor seleccione al menos un asiento");
+    if (!userId) {
+      alert("Por favor inicie sesión para realizar la compra");
       return;
     }
-  
+
     try {
-      // Crear objeto de orden
       const orderData = {
         items: [
           {
@@ -118,29 +131,25 @@ export const SitSelector = () => {
             seatIds: selectedSeats.map(seat => seat.id)
           }
         ],
-        buyerUserId: userId
+        buyerUserId: userId // Usar el userId autenticado
       };
-  
-      console.log("Datos enviados al backend:", orderData); // Log para ver los datos enviados
-  
-      // Enviar la orden al backend
+
       const response = await fetchData("/orders/create-order", "POST", orderData);
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error al procesar la compra");
       }
-  
+
       const orderResult = await response.json();
-      
-      // Marcar la compra como completada
       setPurchaseCompleted(true);
-      
     } catch (err) {
       console.error("Error en la compra:", err);
       alert(`Error: ${err.message}`);
     }
   };
+
+
 
   if (isLoadingScreening || isLoading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -156,7 +165,7 @@ export const SitSelector = () => {
     </div>
   );
 
-  return (
+    return (
     <>
       <Navbar />
       <div className="min-h-screen w-full flex flex-col items-center p-4 bg-cover bg-center bg-no-repeat" 
@@ -224,8 +233,8 @@ export const SitSelector = () => {
                           className={`
                             w-8 h-8 rounded flex items-center justify-center text-xs
                             ${!seat ? 'bg-transparent cursor-default' : 
-                               seat.status === "occupied" ? 'bg-gray-400 cursor-not-allowed' :
-                               selectedSeats.some(s => s.id === seat.id) ? 'bg-Success text-white' : 'bg-btn-primary hover:bg-blue-600 text-white'}
+                              seat.status === "occupied" ? 'bg-gray-400 cursor-not-allowed' :
+                              selectedSeats.some(s => s.id === seat.id) ? 'bg-Success text-white' : 'bg-btn-primary hover:bg-blue-600 text-white'}
                           `}
                           disabled={!seat || seat.status === "occupied"}
                           onClick={() => seat && toggleSeat(seat)}
