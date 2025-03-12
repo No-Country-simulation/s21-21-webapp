@@ -10,20 +10,34 @@ import { UpdateMovieDto } from "./dto/update-movie.dto";
 export class MoviesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(data: CreateMovieDto) {
-    return this.prisma.movie.create({ data });
+  async create(dto: CreateMovieDto) {
+    return this.prisma.movie.create({
+      data: { ...dto,
+        releaseDate: new Date(dto.releaseDate)
+       },
+    });
   }
 
-  findAll() {
-    return this.prisma.movie.findMany();
+  async findAll() {
+    return this.prisma.movie.findMany(
+    //   {
+    //   orderBy: { releaseDate: "desc" },
+    // }
+  );
+  }
+  
+
+  async findOne(id: string) {
+    return this.prisma.movie.findUnique({
+      where: {id}
+    })
   }
 
-  findOne(id: string) {
-    return this.prisma.movie.findUnique({ where: { id } });
-  }
-
-  update(id: string, data: UpdateMovieDto) {
-    return this.prisma.movie.update({ where: { id }, data });
+  async update(id: string, dto: UpdateMovieDto) {
+    return this.prisma.movie.update({
+      where: { id },
+      data: { ...dto },
+    });
   }
 
   remove(id: string) {

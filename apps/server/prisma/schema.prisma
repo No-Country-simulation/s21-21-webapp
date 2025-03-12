@@ -73,6 +73,9 @@ model Movie {
   imageUrl    String?
   trailerUrl  String?
   description String?
+  classification String
+  format       String[]  // Lista de formatos (ejemplo: ["2D", "3D"])
+  releaseDate  DateTime 
   screenings  Screening[]
 }
 
