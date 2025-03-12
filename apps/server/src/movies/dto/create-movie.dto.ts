@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString, IsUrl } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsDate, IsInt, IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateMovieDto {
   @ApiProperty({ example: "Inception" })
@@ -36,4 +37,19 @@ export class CreateMovieDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({ example: "PG-13"})
+  @IsString()
+  classification: string;
+
+  @ApiProperty({ example: ["2D", "3D"]})
+  @IsArray()
+  @IsString({each: true})
+  format: string[];
+
+  @ApiProperty({example: "2024-06-15"})
+  @IsDate()
+  @Type(() => Date) // Convierte el string a Date automáticamente
+  releaseDate: Date;
+
 }
