@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   HttpCode,
+  Patch,
 } from "@nestjs/common";
 import { MoviesService } from "./movies.service";
 import { CreateMovieDto } from "./dto/create-movie.dto";
@@ -40,6 +41,11 @@ export class MoviesController {
   @ApiOperation({ summary: "Update a movie" })
   update(@Param("id") id: string, @Body() updateMovieDto: UpdateMovieDto) {
     return this.moviesService.update(id, updateMovieDto);
+  }
+
+  @Patch(":id")
+  async updateMovie(@Param("id") id: string, @Body() dto: UpdateMovieDto) {
+    return this.moviesService.update(id, dto);
   }
 
   @Delete(":id")

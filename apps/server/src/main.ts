@@ -8,19 +8,17 @@ async function bootstrap() {
     bodyParser: true,
     rawBody: true,
   });
-
   app.enableCors({
     origin: [
+      "https://cine-astas.vercel.app",
       "http://localhost:5173",
       "http://localhost:3000",
-      "http://localhost:4000",
-      "https://cine-astas.vercel.app/Login",
-    ], // Add your frontend URL(s)
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    ],
+    methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     credentials: true,
+    allowedHeaders: "Content-Type, Authorization",
   });
 
-  // Global validation pipe
   app.useGlobalPipes(new ValidationPipe());
 
   app.setGlobalPrefix("api");
