@@ -1,11 +1,12 @@
 import { useIsMutating } from "@tanstack/react-query";
 import Button from "../../Components/Button";
-import GoogleButton from "../../Components/GoogleButton";
+import GoogleButton from "../../Components/Googlebutton";
 import { useLogin } from "../../Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Este campo es requerido"),
@@ -15,6 +16,7 @@ const loginSchema = z.object({
 export const Login = () => {
   const { mutate: login } = useLogin();
   const isMutating = useIsMutating();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const loginForm = useForm({
     resolver: zodResolver(loginSchema),
@@ -112,20 +114,22 @@ export const Login = () => {
 
             <Button
               className="w-full max-w-80 bg-btn-primary text-white p-1 rounded-sm font-bold hover:bg-btn-hover transition"
-              disabled={isMutating > 0}
+              disabled={isMutating > 0 || isGoogleLoading}
             >
-              {isMutating > 0 ? "Ingresando..." : "Ingresar"}
+              {isMutating > 0 || isGoogleLoading ? "Ingresando..." : "Ingresar"}
             </Button>
+
             <div className="w-full max-w-80 flex items-center justify-center">
-              <GoogleButton />
+              <GoogleButton setIsLoading={setIsGoogleLoading} />
             </div>
-            <div className="w-full max-w-80 mb-1 mt-2 text-center ">
+
+            <div className="w-full max-w-80 mb-1 mt-2 text-center">
               <a href="#" className="text-blue-950 text-sm hover:underline">
                 ¿Olvidó tu contraseña?
               </a>
             </div>
 
-            <div className="w-full max-w-80 text-center ">
+            <div className="w-full max-w-80 text-center">
               <a
                 href="/Register"
                 className="text-blue-950 text-sm hover:underline"

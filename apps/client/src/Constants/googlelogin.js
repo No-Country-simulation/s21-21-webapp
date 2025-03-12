@@ -1,29 +1,30 @@
-import axios from "axios";
-
-const API_BASE_URL = "http://localhost:3000";
+import useAuthStore from "../store/authStore";
+import { fetchData } from "../utils/fetchData";
 
 export const googleLogin = async (token) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/api/auth/google-login`,
+    const response = await fetchData(
+      "/auth/google-login",
+      "POST",
       { token },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      null,
+      true
     );
 
-    return response.data;
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error logging in with Google");
+    }
+
+    useAuthStore.getState().login({
+      user: data.user,
+      access_token: data.access_token,
+    });
+
+    return data;
   } catch (error) {
     console.error("Google login error:", error);
-
-    const errorMessage =
-      error.response?.data?.message ||
-      error.message ||
-      "Error logging in with Google";
-
-    throw new Error(errorMessage);
+    throw error;
   }
 };
