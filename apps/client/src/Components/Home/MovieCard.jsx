@@ -14,7 +14,7 @@ const MovieCard = ({
   schedules,
 }) => {
   return (
-    <Link to={`/movie/${title}`}>
+    <Link to={`/movie/${encodeURIComponent(title)}`}>
       <div className="w-full md:w-[340px] max-w-85 px-3 py-3 sm:px-5 sm:py-4.5 bg-florar-white rounded-lg movie-card shadow-card flex flex-col">
         <img
           src={cover}
