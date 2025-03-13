@@ -12,6 +12,7 @@ import { OrdersModule } from "./orders/orders.module";
 import { ConfigModule } from "@nestjs/config";
 import { NotificationsModule } from './notifications/notifications.module';
 import { SeatModule } from './seat/seat.module';
+import { SeedModule } from './seed/seed.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,6 +30,7 @@ import { SeatModule } from './seat/seat.module';
     OrdersModule,
     NotificationsModule,
     SeatModule,
+    ...(process.env.NODE_ENV !== 'production' ? [SeedModule] : []),
   ],
 })
 export class AppModule {}

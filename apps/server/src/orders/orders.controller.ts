@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { FindOneOrderDto } from './dto/find-one-order.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -16,5 +17,10 @@ export class OrdersController {
       order,
       paymentSession
     }
+  }
+
+  @Get('find-one')
+  findOne(@Body() { orderId }: FindOneOrderDto) {
+    return this.ordersService.findOne(orderId)
   }
 }
