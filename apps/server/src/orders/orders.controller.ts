@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -19,8 +19,8 @@ export class OrdersController {
     }
   }
 
-  @Get('find-one')
-  findOne(@Body() { orderId }: FindOneOrderDto) {
+  @Get(':orderId')
+  findOne(@Param() { orderId }: FindOneOrderDto) {
     return this.ordersService.findOne(orderId)
   }
 }
