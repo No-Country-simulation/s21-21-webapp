@@ -1,4 +1,4 @@
-import { Body, Injectable } from "@nestjs/common";
+import { Body, Injectable, NotFoundException } from "@nestjs/common";
 
 import { MoviesService } from "../movies/movies.service";
 
@@ -213,5 +213,18 @@ export class OrdersService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async findOne(id: string) {
+    const order = await this.prismaService.order.findUnique({
+      where: { id },
+      include: {
+        OrderItem: true
+      }
+    });
+
+    if (!order) throw new NotFoundException(`Order with id ${id} not found`)
+
+    return order
   }
 }
