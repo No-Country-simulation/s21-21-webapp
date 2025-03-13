@@ -46,7 +46,6 @@ export const SitSelector = () => {
         }
 
         const data = await response.json();
-        console.log(data);
         // Marcar los asientos ocupados con el estado "occupied"
         const seatsWithStatus = data.map((seat) => {
           if (seat.isOccupied) {
@@ -145,7 +144,7 @@ export const SitSelector = () => {
       alert("Por favor inicie sesión para realizar la compra");
       return;
     }
-  
+
     try {
       const orderData = {
         items: [
@@ -167,27 +166,29 @@ export const SitSelector = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Error al procesar la compra");
       }
-  
+
       const { order, paymentSession } = await response.json();
-  
+
+      console.log("Orden creada:", order);
+      console.log("Sesión de pago:", paymentSession);
+
+      // Guardar datos en localStorage
+      localStorage.setItem("lastOrder", JSON.stringify(order));
+
       // Redirigir al usuario a la página de pago de Stripe
       window.location.href = paymentSession.url;
-  
-      // Guardar el orderId en localStorage para usarlo después del pago
-      localStorage.setItem("lastOrderId", order.id);
     } catch (err) {
       console.error("Error en la compra:", err);
       alert(`Error: ${err.message}`);
     }
   };
 
-
-
-  if (isLoadingScreening || isLoading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-  );
+  if (isLoadingScreening || isLoading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
 
   if (isErrorScreening || error || !screening)
     return (
@@ -263,7 +264,7 @@ export const SitSelector = () => {
                 <p>Precio por asiento: ${screening.price.toFixed(2)}</p>
               </div>
 
-              <div className="flex space-x-4 mb-4">
+              <div className="flex flex-col md:flex-row space-x-4 mb-4">
                 <div className="flex items-center">
                   <span className="w-4 h-4 bg-btn-primary inline-block mr-2"></span>{" "}
                   Disponible
@@ -340,7 +341,7 @@ export const SitSelector = () => {
                   className={`w-full py-3 rounded-md ${
                     selectedSeats.length === 0
                       ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                      : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                   }`}
                 >
                   Comprar

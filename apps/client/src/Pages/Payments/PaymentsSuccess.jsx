@@ -1,72 +1,66 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
+import Button from "../../Components/Button";
 
 export const PaymentsSuccess = () => {
-  const location = useLocation();
+  const [order, setOrder] = useState(null);
   const navigate = useNavigate();
-  const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
-    // Obtener los detalles de la orden desde la URL o el estado de la navegación
-    const queryParams = new URLSearchParams(location.search);
-    const orderId = queryParams.get("orderId");
-
-    if (orderId) {
-      // Obtener los detalles de la orden desde el backend
-      fetchOrderDetails(orderId);
-    } else {
-      // Si no hay orderId, redirigir al inicio
-      navigate("/");
+    const storedOrder = localStorage.getItem("lastOrder");
+    if (storedOrder) {
+      setOrder(JSON.parse(storedOrder));
+      localStorage.removeItem("lastOrder"); // Eliminar después de cargar
     }
-  }, [location, navigate]);
+  }, []);
 
-  const fetchOrderDetails = async (orderId) => {
-    try {
-      const response = await fetchData(`/orders/${orderId}`, "GET");
-      if (!response.ok) {
-        throw new Error("Error al obtener los detalles de la orden");
-      }
-      const data = await response.json();
-      setOrderDetails(data);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al cargar los detalles de la orden");
-    }
-  };
-
-  if (!orderDetails) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+  if (!order) {
+    return <p>Cargando detalles de la orden...</p>;
   }
 
   return (
     <>
       <Navbar />
-      <div className="min-h-screen w-full flex flex-col items-center p-4 bg-cover bg-center bg-no-repeat" 
-           style={{ backgroundImage: "url('/cinema-seats-still-life.jpg')" }}>
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full">
-          <h2 className="text-2xl font-bold mb-4">Compra realizada exitosamente</h2>
+      <div className="container mx-auto my-10 w-full flex flex-col items-center">
+        <div className="bg-white p-6 rounded-lg shadow-card max-w-3xl w-full">
+          <h2 className="text-2xl font-bold mb-4 text-center">
+            ¡Pago Exitoso!
+          </h2>
+          <p className="text-center ">
+            Gracias por tu compra. Aquí están los detalles de tu orden:
+          </p>
           <div className="mb-4">
-            <h3 className="text-lg font-medium">{orderDetails.movie?.title}</h3>
-            <p>Fecha: {new Date(orderDetails.schedule).toLocaleDateString()}</p>
-            <p>Hora: {new Date(orderDetails.schedule).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
-            <p>Sala: {orderDetails.hall?.name}</p>
+            {order.OrderItem.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col md:flex-row items-center space-x-4 my-4"
+              >
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  width={150}
+                  className="rounded-lg shadow-card mb-5 md:mb-0"
+                />
+                <div className="flex flex-col space-y-4 ">
+                  <p>
+                    <strong>Película:</strong> {item.title}
+                  </p>
+                  <p>
+                    <strong>Cantidad:</strong> {item.quantity} entrada(s)
+                  </p>
+                  <p>
+                    <strong>Precio:</strong> ${item.price} ARS
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            <Button onClick={() => navigate("/")} className="w-full">
+              Volver al inicio
+            </Button>
           </div>
-          <div className="mb-4">
-            <p>Asientos seleccionados: {orderDetails.selectedSeats?.map(s => `${s.row}${s.number}`).join(', ')}</p>
-            <p>Total pagado: ${orderDetails.totalAmount?.toFixed(2)}</p>
-          </div>
-          <button
-            onClick={() => navigate("/")}
-            className="w-full py-3 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Volver al inicio
-          </button>
         </div>
       </div>
       <Footer />
